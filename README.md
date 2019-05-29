@@ -16,7 +16,7 @@ EXPORTS(Calculator*) Calculator_Calculator() { return new Calculator(); }
 EXPORTS(int) Calculator_add(Calculator* target, int x, int y);
 ```
 
-Now we can easily generate C# code for it:
+Now we can easily bind it to C#:
 
 ```csharp
 public partial class Calculator
