@@ -5,47 +5,6 @@ using System.Runtime.InteropServices;
 
 namespace MyNamespace
 {
-﻿    public unsafe partial class simdjson : IDisposable
-    {
-        /// <summary>
-        /// Pointer to the underlying native object
-        /// </summary>
-        public IntPtr Handle { get; private set; }
-
-        /// <summary>
-        /// Create simdjson from a native pointer
-        /// </summary>
-        public simdjson(IntPtr handle) => this.Handle = handle;
-
-        #region DllImports
-
-        #endregion
-
-        #region IDisposable
-        private static readonly object DisposeSync = new object();
-
-        public void Dispose()
-        {
-            if (Handle != IntPtr.Zero)
-            {
-                lock (DisposeSync)
-                {
-                    if (Handle != IntPtr.Zero)
-                    {
-                        simdjson_Dispose(Handle);
-                        Handle = IntPtr.Zero;
-                    }
-                }
-            }
-        }
-
-        ~simdjson() => Dispose();
-
-        [DllImport("simdjson.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void simdjson_Dispose(IntPtr target);
-        #endregion
-    }
-
 ﻿    public unsafe partial class padded_string : IDisposable
     {
         /// <summary>
@@ -390,18 +349,8 @@ namespace MyNamespace
         #endregion
     }
 
-﻿    public unsafe partial class GlobalFunctions : IDisposable
+﻿    public unsafe static partial class GlobalFunctions
     {
-        /// <summary>
-        /// Pointer to the underlying native object
-        /// </summary>
-        public IntPtr Handle { get; private set; }
-
-        /// <summary>
-        /// Create GlobalFunctions from a native pointer
-        /// </summary>
-        public GlobalFunctions(IntPtr handle) => this.Handle = handle;
-
         #region DllImports
         [DllImport("simdjson.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern Byte _add_overflow0(UInt64 value1, UInt64 value2, UInt64* result);
@@ -513,30 +462,6 @@ namespace MyNamespace
 
         [DllImport("simdjson.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _build_parsed_json46(IntPtr s);
-        #endregion
-
-        #region IDisposable
-        private static readonly object DisposeSync = new object();
-
-        public void Dispose()
-        {
-            if (Handle != IntPtr.Zero)
-            {
-                lock (DisposeSync)
-                {
-                    if (Handle != IntPtr.Zero)
-                    {
-                        %CCLASS_NAME%_Dispose(Handle);
-                        Handle = IntPtr.Zero;
-                    }
-                }
-            }
-        }
-
-        ~GlobalFunctions() => Dispose();
-
-        [DllImport("simdjson.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void GlobalFunctions_Dispose(IntPtr target);
         #endregion
     }
 }
