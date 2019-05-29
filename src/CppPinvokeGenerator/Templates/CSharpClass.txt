@@ -1,0 +1,41 @@
+﻿    public unsafe partial class %CLASS_NAME% : IDisposable
+    {
+        /// <summary>
+        /// Pointer to the underlying native object
+        /// </summary>
+        public IntPtr Handle { get; private set; }
+
+        /// <summary>
+        /// Create %CLASS_NAME% from a native pointer
+        /// </summary>
+        public %CLASS_NAME%(IntPtr handle) => this.Handle = handle;
+
+        #region DllImports
+%DLLIMPORTS%
+        #endregion
+
+        #region IDisposable
+        private static readonly object DisposeSync = new object();
+
+        public void Dispose()
+        {
+            if (Handle != IntPtr.Zero)
+            {
+                lock (DisposeSync)
+                {
+                    if (Handle != IntPtr.Zero)
+                    {
+                        %CCLASS_NAME%_Dispose(Handle);
+                        Handle = IntPtr.Zero;
+                    }
+                }
+            }
+        }
+
+        ~%CLASS_NAME%() => Dispose();
+
+        [DllImport(%NATIVE_LIBRARY_PATH%, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void %CLASS_NAME%_Dispose(IntPtr target);
+        #endregion
+    }
+

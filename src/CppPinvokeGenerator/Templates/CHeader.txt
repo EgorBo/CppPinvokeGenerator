@@ -1,0 +1,8 @@
+﻿// This file is auto-generated. Do not edit.
+
+#if (defined WIN32 || defined _WIN32)
+#define EXPORTS(returntype) extern "C" __declspec(dllexport) returntype __cdecl
+#else
+#define EXPORTS(returntype) extern "C" __attribute__((visibility("default"))) returntype
+#endif
+

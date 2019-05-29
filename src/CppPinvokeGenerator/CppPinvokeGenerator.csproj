@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\CSharpClass.txt" />
+    <EmbeddedResource Include="Templates\CSharpHeader.txt" />
+    <EmbeddedResource Include="Templates\CHeader.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CppAst" Version="0.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>

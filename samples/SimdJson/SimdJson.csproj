@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Output\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CppAst" Version="0.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CppPinvokeGenerator\CppPinvokeGenerator.csproj" />
+  </ItemGroup>
+
+
+</Project>
