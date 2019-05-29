@@ -13,14 +13,16 @@ namespace CppPinvokeGenerator
     {
         private static readonly ILogger Logger = LoggerFactory.GetLogger<TypeMapper>();
 
-        public static void Generate(TypeMapper mapper, TemplateManager templateManager, string @namespace, string dllImportPath, string outCFile, string outCsFile)
+        /// <param name="dllImportPath">will be used as the first argument in [DllImport]. Can be a path to some constant</param>
+        /// <param name="generateCForGlobalFunctions">sometimes global functions are ready to be pinvoked as is</param>
+        public static void Generate(TypeMapper mapper, TemplateManager templateManager, string @namespace, string dllImportPath, string outCFile, string outCsFile, bool generateCForGlobalFunctions = true)
         {
             var csFileSb = new StringBuilder();
             var cFileSb = new StringBuilder();
-            foreach (CppClass cppClass in mapper.GetAllClasses())
+            foreach (CppClassContainer cppClass in mapper.GetAllClasses())
             {
                 var csClassSb = new StringBuilder();
-                List<CppFunction> allFunctions = cppClass.GetFunctionsAndConstructors();
+                List<CppFunction> allFunctions = cppClass.Functions;
                 for (int i = 0; i < allFunctions.Count; i++)
                 {
                     CppFunction function = allFunctions[i];
@@ -35,7 +37,9 @@ namespace CppPinvokeGenerator
                     }
 
                     // Type_MethodName1
-                    string flatFunctionName = $"{cppClass.GetDisplayName()}_{function.Name}{i}";
+                    string flatFunctionName = $"{cppClass.Name}_{function.Name}{i}";
+                    if (!generateCForGlobalFunctions)
+                        flatFunctionName = function.Name; // we are going to pinvoke it directly
 
                     var cfunctionWriter = new FunctionWriter();
                     var dllImportWriter = new FunctionWriter();
@@ -46,7 +50,7 @@ namespace CppPinvokeGenerator
 
                     if (function.IsConstructor)
                     {
-                        cfunctionWriter.ReturnType(cppClass.GetFullTypeName() + "*", "EXPORTS");
+                        cfunctionWriter.ReturnType(cppClass.Class.GetFullTypeName() + "*", "EXPORTS");
                         dllImportWriter.ReturnType(nameof(IntPtr));
                     }
                     else
@@ -56,14 +60,17 @@ namespace CppPinvokeGenerator
                         dllImportWriter.ReturnType(mapper.MapToManagedType(funcReturnType));
                     }
 
+                    // PS: should we generate C for global functions (we currently do)? probably it should be optional
+
                     cfunctionWriter.MethodName(flatFunctionName);
                     dllImportWriter.MethodName(flatFunctionName);
 
                     if (!function.IsConstructor &&
-                        !function.IsStatic())
+                        !function.IsStatic() &&
+                        !cppClass.IsGlobal)
                     {
                         // all instance methods will have "this" as the first argument
-                        cfunctionWriter.Parameter(cppClass.GetFullTypeName() + "*", "target");
+                        cfunctionWriter.Parameter(cppClass.Class.GetFullTypeName() + "*", "target");
                         dllImportWriter.Parameter(nameof(IntPtr), "target");
                     }
 
@@ -75,14 +82,18 @@ namespace CppPinvokeGenerator
 
                         dllImportWriter.Parameter(
                             mapper.MapToManagedType(parameter.Type.GetDisplayName()),
-                            parameter.Name);
+                            mapper.EscapeVariableName(parameter.Name));
                     }
 
                     // append "return" if needed
                     cfunctionWriter.BodyStart();
 
-                    if (!function.IsConstructor &&
-                        !function.IsStatic())
+                    if (cppClass.IsGlobal)
+                    {
+                        // GlobalMethod
+                        cfunctionWriter.BodyCallMethod(function.Name);
+                    }
+                    else if(!function.IsConstructor && !function.IsStatic())
                     {
                         // target->InstanceMethod
                         cfunctionWriter.BodyCallMethod($"target->{function.Name}");
@@ -90,12 +101,12 @@ namespace CppPinvokeGenerator
                     else if (function.IsStatic())
                     {
                         // Class1::StaticMethod
-                        cfunctionWriter.BodyCallMethod(cppClass.GetFullTypeName() + "::" + function.Name);
+                        cfunctionWriter.BodyCallMethod(cppClass.Class.GetFullTypeName() + "::" + function.Name);
                     }
                     else
                     {
                         // new Class1
-                        cfunctionWriter.BodyCallMethod($"new {cppClass.GetFullTypeName()}");
+                        cfunctionWriter.BodyCallMethod($"new {cppClass.Class.GetFullTypeName()}");
                     }
 
 
@@ -111,8 +122,10 @@ namespace CppPinvokeGenerator
                     cFileSb.AppendLine();
                 }
 
-                csFileSb.Append(templateManager.CSharpClass(cppClass.GetDisplayName(), 
-                    cppClass.GetDisplayName(), csClassSb.ToString(), dllImportPath));
+                if (cppClass.IsGlobal && generateCForGlobalFunctions)
+                    csFileSb.Append(templateManager.CSharpGlobalClass(csClassSb.ToString(), dllImportPath));
+                else if (!cppClass.IsGlobal)
+                    csFileSb.Append(templateManager.CSharpClass(cppClass.Name, cppClass.Name, csClassSb.ToString(), dllImportPath));
             }
 
             File.WriteAllText(outCFile, templateManager.CHeader() + cFileSb);

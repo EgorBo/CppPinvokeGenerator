@@ -6,13 +6,23 @@ namespace CppPinvokeGenerator.Templates
 {
     public class TemplateManager
     {
-        private string cheader = "";
+        private string cHeader = "";
+        private string csGlobalClass = "GlobalFunctions";
 
-        public void AddToCHeader(string content) 
-            => cheader = content + "\n";
+        public TemplateManager AddToCHeader(string content)
+        {
+            cHeader += content + "\n";
+            return this;
+        }
+
+        public TemplateManager SetGlobalFunctionsClassName(string className)
+        {
+            csGlobalClass = className;
+            return this;
+        }
 
         public string CHeader() 
-            => GetEmbeddedResource("CHeader.txt") + cheader;
+            => GetEmbeddedResource("CHeader.txt") + cHeader;
 
         public string CSharpHeader(string @namespace, string content) 
             => GetEmbeddedResource("CSharpHeader.txt")
@@ -23,6 +33,12 @@ namespace CppPinvokeGenerator.Templates
             => GetEmbeddedResource("CSharpClass.txt")
                 .Replace("%CLASS_NAME%", className)
                 .Replace("%CCLASS_NAME%", nativeClassName)
+                .Replace("%DLLIMPORTS%", dllImportsContent.Trim('\n', '\r'))
+                .Replace("%NATIVE_LIBRARY_PATH%", nativeLibraryPath);
+
+        public string CSharpGlobalClass(string dllImportsContent, string nativeLibraryPath)
+            => GetEmbeddedResource("CSharpGlobalClass.txt")
+                .Replace("%CLASS_NAME%", csGlobalClass)
                 .Replace("%DLLIMPORTS%", dllImportsContent.Trim('\n', '\r'))
                 .Replace("%NATIVE_LIBRARY_PATH%", nativeLibraryPath);
 

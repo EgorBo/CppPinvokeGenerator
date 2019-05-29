@@ -52,9 +52,24 @@ namespace CppPinvokeGenerator
                 { "unsigned long",      nameof(UInt64) },
                 { "unsigned long int",  nameof(UInt64) },
                 { "float",              nameof(Single) },
-                { "double",             nameof(Double) }, 
+                { "double",             nameof(Double) },
                 // TODO: long double, wchar_t ?
+
+                { "void", "void" },
+                { "void*", nameof(IntPtr) },
             };
+
+        private readonly string[] _illiegalVariableNames =
+            {
+                // will be prefixed with @
+                "var",
+                "namespace",
+                "ref",
+                "out",
+                "class",
+            };
+
+        public CppCompilation CppCompilation => _cppCompilation;
 
         public TypeMapper(CppCompilation cppCompilation)
         {
@@ -67,13 +82,16 @@ namespace CppPinvokeGenerator
             Logger.LogDebug("Inited.");
         }
 
-        public IEnumerable<CppClass> GetAllClasses()
+        public IEnumerable<CppClassContainer> GetAllClasses()
         {
             foreach (var cppClass in _cppCompilation.GetAllClassesRecursively())
             {
                 if (IsSupported(cppClass.GetDisplayName()))
-                    yield return cppClass;
+                    yield return new CppClassContainer(cppClass);
             }
+
+            // "Global" class for global functions
+            yield return new CppClassContainer(_cppCompilation.Functions);
         }
 
         public void RegisterClass(string className)
@@ -106,11 +124,14 @@ namespace CppPinvokeGenerator
             if (_mappings.TryGetValue(type, out string managedType))
                 return managedType + (isPtr ? "*" : "");
 
+            if (isPtr && _mappings.TryGetValue(type + "*", out string managedTypePtr))
+                return managedTypePtr;
+
             if (_registeredTypes.Contains(type))
                 return "IntPtr";
 
             Logger.LogWarning($"No C# equivalent for {type}");
-            return type;
+            return type + (isPtr ? "*" : "");
         }
 
         public bool IsSupported(string type)
@@ -133,5 +154,34 @@ namespace CppPinvokeGenerator
                 type = type.Replace("*", "");
             return type;
         }
+
+        internal string EscapeVariableName(string name)
+        {
+            if (_illiegalVariableNames.Contains(name))
+                return "@" + name;
+            return name;
+        }
+    }
+
+    public class CppClassContainer
+    {
+        public CppClassContainer(CppClass cppClass)
+        {
+            Functions = cppClass.Constructors.Concat(cppClass.Functions).ToList();
+            Class = cppClass;
+        }
+
+        public CppClassContainer(IEnumerable<CppFunction> functions)
+        {
+            Functions = functions.ToList();
+        }
+
+        public bool IsGlobal => Class == null;
+
+        public CppClass Class { get; }
+
+        public string Name => Class?.GetDisplayName();
+
+        public List<CppFunction> Functions { get; }
     }
 }

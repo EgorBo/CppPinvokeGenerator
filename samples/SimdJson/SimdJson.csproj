@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Output\*.*" />
+    <Compile Remove="Output\Bindings.cs" />
+    <None Include="Output\Bindings.cs" />
   </ItemGroup>
 
   <ItemGroup>

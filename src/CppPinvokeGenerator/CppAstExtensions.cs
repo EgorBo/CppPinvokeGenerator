@@ -12,9 +12,6 @@ namespace CppPinvokeGenerator
         public static bool IsOperator(this CppFunction func) => func.Name.StartsWith("operator"); // TODO: regex?
 
         public static bool IsStatic(this CppFunction func) => func.StorageQualifier == CppStorageQualifier.Static;
-
-        public static List<CppFunction> GetFunctionsAndConstructors(this CppClass cppClass) =>
-            cppClass.Constructors.Concat(cppClass.Functions).ToList();
         
         /// <summary>
         /// If a type defined under another type, then print the full name, e.g. Class1::Class2

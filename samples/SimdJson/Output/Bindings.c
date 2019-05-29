@@ -45,6 +45,8 @@ EXPORTS(uint32_t) ParsedJson_get_current_loc12(ParsedJson* target) { return targ
 
 EXPORTS(void) ParsedJson_annotate_previousloc13(ParsedJson* target, uint32_t saved_loc, uint64_t val) { target->annotate_previousloc(saved_loc, val); }
 
+EXPORTS(const char*) InvalidJSON_what0(ParsedJson::InvalidJSON* target) { return target->what(); }
+
 EXPORTS(ParsedJson::iterator*) iterator_iterator0(ParsedJson& pj_) { return new ParsedJson::iterator(pj_); }
 
 EXPORTS(ParsedJson::iterator*) iterator_iterator1(const iterator& o) { return new ParsedJson::iterator(o); }
@@ -102,4 +104,78 @@ EXPORTS(bool) iterator_up27(ParsedJson::iterator* target) { return target->up();
 EXPORTS(bool) iterator_down28(ParsedJson::iterator* target) { return target->down(); }
 
 EXPORTS(void) iterator_to_start_scope29(ParsedJson::iterator* target) { target->to_start_scope(); }
+
+EXPORTS(bool) _add_overflow0(uint64_t value1, uint64_t value2, uint64_t* result) { return add_overflow(value1, value2, result); }
+
+EXPORTS(bool) _mul_overflow1(uint64_t value1, uint64_t value2, uint64_t* result) { return mul_overflow(value1, value2, result); }
+
+EXPORTS(int) _trailingzeroes2(uint64_t input_num) { return trailingzeroes(input_num); }
+
+EXPORTS(int) _leadingzeroes3(uint64_t input_num) { return leadingzeroes(input_num); }
+
+EXPORTS(int) _hamming4(uint64_t input_num) { return hamming(input_num); }
+
+EXPORTS(void*) _aligned_malloc5(size_t alignment, size_t size) { return aligned_malloc(alignment, size); }
+
+EXPORTS(char*) _aligned_malloc_char6(size_t alignment, size_t size) { return aligned_malloc_char(alignment, size); }
+
+EXPORTS(void) _aligned_free7(void* memblock) { aligned_free(memblock); }
+
+EXPORTS(void) _aligned_free_char8(char* memblock) { aligned_free_char(memblock); }
+
+EXPORTS(char*) _allocate_padded_buffer9(size_t length) { return allocate_padded_buffer(length); }
+
+EXPORTS(uint32_t) _is_not_structural_or_whitespace10(uint8_t c) { return is_not_structural_or_whitespace(c); }
+
+EXPORTS(uint32_t) _is_structural_or_whitespace11(uint8_t c) { return is_structural_or_whitespace(c); }
+
+EXPORTS(uint32_t) _hex_to_u32_nocheck12(const uint8_t* src) { return hex_to_u32_nocheck(src); }
+
+EXPORTS(size_t) _codepoint_to_utf813(uint32_t cp, uint8_t* c) { return codepoint_to_utf8(cp, c); }
+
+EXPORTS(void) _print_with_escapes14(const unsigned char* src) { print_with_escapes(src); }
+
+EXPORTS(void) _print_with_escapes16(const unsigned char* src, size_t len) { print_with_escapes(src, len); }
+
+EXPORTS(size_t) _jsonminify21(const uint8_t* buf, size_t len, uint8_t* out) { return jsonminify(buf, len, out); }
+
+EXPORTS(size_t) _jsonminify22(const char* buf, size_t len, char* out) { return jsonminify(buf, len, out); }
+
+EXPORTS(size_t) _jsonminify24(const padded_string& p, char* out) { return jsonminify(p, out); }
+
+EXPORTS(bool) _find_structural_bits27(const uint8_t* buf, size_t len, ParsedJson& pj) { return find_structural_bits(buf, len, pj); }
+
+EXPORTS(bool) _find_structural_bits28(const char* buf, size_t len, ParsedJson& pj) { return find_structural_bits(buf, len, pj); }
+
+EXPORTS(bool) _handle_unicode_codepoint29(const uint8_t** src_ptr, uint8_t** dst_ptr) { return handle_unicode_codepoint(src_ptr, dst_ptr); }
+
+EXPORTS(bool) _parse_string30(const uint8_t* buf, size_t len, ParsedJson& pj, const uint32_t depth, uint32_t offset) { return parse_string(buf, len, pj, depth, offset); }
+
+EXPORTS(bool) _is_integer31(char c) { return is_integer(c); }
+
+EXPORTS(bool) _is_not_structural_or_whitespace_or_exponent_or_decimal_or_null32(unsigned char c) { return is_not_structural_or_whitespace_or_exponent_or_decimal_or_null(c); }
+
+EXPORTS(bool) _parse_float33(const const uint8_t* buf, ParsedJson& pj, const uint32_t offset, bool found_minus) { return parse_float(buf, pj, offset, found_minus); }
+
+EXPORTS(bool) _parse_large_integer34(const const uint8_t* buf, ParsedJson& pj, const uint32_t offset, bool found_minus) { return parse_large_integer(buf, pj, offset, found_minus); }
+
+EXPORTS(bool) _parse_number35(const const uint8_t* buf, ParsedJson& pj, const uint32_t offset, bool found_minus) { return parse_number(buf, pj, offset, found_minus); }
+
+EXPORTS(void) _init_state_machine36() { init_state_machine(); }
+
+EXPORTS(int) _unified_machine37(const uint8_t* buf, size_t len, ParsedJson& pj) { return unified_machine(buf, len, pj); }
+
+EXPORTS(int) _unified_machine38(const char* buf, size_t len, ParsedJson& pj) { return unified_machine(buf, len, pj); }
+
+EXPORTS(int) _json_parse39(const uint8_t* buf, size_t len, ParsedJson& pj, bool reallocifneeded) { return json_parse(buf, len, pj, reallocifneeded); }
+
+EXPORTS(int) _json_parse40(const char* buf, size_t len, ParsedJson& pj, bool reallocifneeded) { return json_parse(buf, len, pj, reallocifneeded); }
+
+EXPORTS(int) _json_parse42(const padded_string& s, ParsedJson& pj) { return json_parse(s, pj); }
+
+EXPORTS(ParsedJson) _build_parsed_json43(const uint8_t* buf, size_t len, bool reallocifneeded) { return build_parsed_json(buf, len, reallocifneeded); }
+
+EXPORTS(ParsedJson) _build_parsed_json44(const char* buf, size_t len, bool reallocifneeded) { return build_parsed_json(buf, len, reallocifneeded); }
+
+EXPORTS(ParsedJson) _build_parsed_json46(const padded_string& s) { return build_parsed_json(s); }
 

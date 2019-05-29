@@ -21,6 +21,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\CSharpGlobalClass.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\CSharpGlobalClass.txt" />
     <EmbeddedResource Include="Templates\CSharpClass.txt" />
     <EmbeddedResource Include="Templates\CSharpHeader.txt" />
     <EmbeddedResource Include="Templates\CHeader.txt" />
