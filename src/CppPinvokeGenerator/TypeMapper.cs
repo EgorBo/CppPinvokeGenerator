@@ -20,13 +20,13 @@ namespace CppPinvokeGenerator
                 { "uint16_t",          nameof(UInt16) },
                 { "uint32_t",          nameof(UInt32) },
                 { "uint64_t",          nameof(UInt64) },
-                { "usize_t" ,          nameof(UInt32) + "/*usize_t*/" }, // .NET really needs native integers
+                { "usize_t" ,          nameof(UIntPtr) + "/*usize_t*/" }, // .NET really needs native integers
                 { "uintptr_t" ,        nameof(UIntPtr) }, // should we use nuint here too?
                 { "int8_t",            nameof(SByte) },
                 { "int16_t",           nameof(Int16) },
                 { "int32_t",           nameof(Int32) },
                 { "int64_t",           nameof(Int64) },
-                { "size_t" ,           nameof(Int64) + "/*size_t*/"},
+                { "size_t" ,           nameof(IntPtr) + "/*size_t*/"},
                 { "intptr_t" ,         nameof(IntPtr)},
 
                 // standard types:

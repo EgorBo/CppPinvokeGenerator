@@ -8,7 +8,8 @@ namespace CppPinvokeGenerator.Templates
     {
         private string cheader = "";
 
-        public void AddToCHeader(string content) => cheader = content + "\n";
+        public void AddToCHeader(string content) 
+            => cheader = content + "\n";
 
         public string CHeader() 
             => GetEmbeddedResource("CHeader.txt") + cheader;

@@ -2,7 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>0.1.1</VersionPrefix>
+    <PackageId>CppPinvokeGenerator</PackageId>
+    <Description>CppPinvokeGenerator is a simple pinvoke generator based on CppAst to generate C# for C++</Description>
+    <Copyright>Egor Bogatov</Copyright>
+    <Authors>Egor Bogatov</Authors>
+    <PackageTags>dllimport;pinvoke;c++;ast;</PackageTags>
+    <PackageProjectUrl>https://github.com/EgorBo/CppPinvokeGenerator</PackageProjectUrl>
+    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/EgorBo/CppPinvokeGenerator</RepositoryUrl>
+    <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
