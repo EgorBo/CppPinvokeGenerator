@@ -24,12 +24,15 @@ public partial class Calculator
     public IntPtr Handle { get; private set; }
     
     // API:
-    public Calculator() => Handle = Calculator_Calculator();
+    public Calculator() => this.Handle = Calculator_Calculator();
     public int Add(int x, int y) => Calculator_add(Handle, x, y);
     
     // DllImports
-    [DllImport("mylib")]
-    private static extern int Calculator_add(IntPtr handle, int x, int y);
+    [DllImport("mylib")] private static extern int Calculator_add(IntPtr handle, int x, int y);
+    [DllImport("mylib")] private static extern IntPtr Calculator_Calculator();
+    
+    // Dispose:
+    ...
 }
 ```
 
