@@ -39,5 +39,22 @@ namespace CppPinvokeGenerator
             => string.Join("\n", 
                 str.Split('\n')
                     .Select(l => new string(' ', tabs * 4) + l));
+
+        public static string DropComments(this string str)
+        {
+            while (str.Contains("/*"))
+            {
+                var indexCommentStart = str.IndexOf("/*", StringComparison.Ordinal);
+                var indexCommentEnd = str.IndexOf("*/", StringComparison.Ordinal);
+                if (indexCommentStart >= 0 && indexCommentEnd > 0 && indexCommentEnd > indexCommentStart)
+                {
+                    str = str.Remove(indexCommentStart, indexCommentEnd - indexCommentStart + 2);
+                }
+                else
+                    break;
+            }
+
+            return str;
+        }
     }
 }

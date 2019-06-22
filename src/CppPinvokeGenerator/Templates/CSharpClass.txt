@@ -10,11 +10,11 @@
         /// Create %CLASS_NAME% from a native pointer
         /// ownsHandle=false means GC won't delete the underlying native object if this C# wrapper goes out of scope
         /// </summary>
-        public %CLASS_NAME%(IntPtr handle, bool ownsHandle = true) : base(ownsHandle) => SetHandle(handle);
+        public %CLASS_NAME%(IntPtr handle, bool ownsHandle) : base(ownsHandle) => SetHandle(handle);
         #endregion
 
         #region API
-//TODO: %API%
+%API%
         #endregion
 
         #region DllImports
@@ -29,7 +29,7 @@
         }
 
         [DllImport(%NATIVE_LIBRARY_PATH%, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void %CLASS_NAME%__delete(IntPtr target);
+        private static extern void %CCLASS_NAME%__delete(IntPtr target);
         #endregion
     }
 

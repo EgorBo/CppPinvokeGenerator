@@ -1,4 +1,4 @@
-﻿// This file is auto-generated. Do not edit.
+﻿// This file is auto-generated (EgorBo/CppPinvokeGenerator). Do not edit.
 
 #if (defined WIN32 || defined _WIN32)
 #define EXPORTS(returntype) extern "C" __declspec(dllexport) returntype __cdecl

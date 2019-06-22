@@ -29,17 +29,19 @@ namespace CppPinvokeGenerator.Templates
                 .Replace("%NAMESPACE%", @namespace)
                 .Replace("%CONTENT%", content.Trim('\n', '\r'));
 
-        public string CSharpClass(string className, string nativeClassName, string dllImportsContent, string nativeLibraryPath)
+        public string CSharpClass(string className, string nativeClassName, string dllImportsContent, string apiContent, string nativeLibraryPath)
             => GetEmbeddedResource("CSharpClass.txt")
                 .Replace("%CLASS_NAME%", className)
                 .Replace("%CCLASS_NAME%", nativeClassName)
                 .Replace("%DLLIMPORTS%", dllImportsContent.Trim('\n', '\r'))
+                .Replace("%API%", apiContent.Trim('\n', '\r'))
                 .Replace("%NATIVE_LIBRARY_PATH%", nativeLibraryPath);
 
-        public string CSharpGlobalClass(string dllImportsContent, string nativeLibraryPath)
+        public string CSharpGlobalClass(string dllImportsContent, string apiContent, string nativeLibraryPath)
             => GetEmbeddedResource("CSharpGlobalClass.txt")
                 .Replace("%CLASS_NAME%", csGlobalClass)
                 .Replace("%DLLIMPORTS%", dllImportsContent.Trim('\n', '\r'))
+                .Replace("%API%", apiContent.Trim('\n', '\r'))
                 .Replace("%NATIVE_LIBRARY_PATH%", nativeLibraryPath);
 
         private string GetEmbeddedResource(string file)

@@ -30,7 +30,7 @@ namespace CppPinvokeGenerator
                 { "intptr_t" ,         nameof(IntPtr)},
 
                 // standard types:
-                { "bool",               nameof(Byte) }, //bool is not blittable
+                { "bool",               nameof(Byte) + "/*bool*/" }, //bool is not blittable
                 { "char",               nameof(SByte) },
                 { "unsigned char",      nameof(Byte) },
                 { "signed char",        nameof(SByte) },
@@ -160,6 +160,58 @@ namespace CppPinvokeGenerator
             if (_illiegalVariableNames.Contains(name))
                 return "@" + name;
             return name;
+        }
+
+        public string ToApiName(string name)
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "JSON", "Json" },
+                { "XML", "Xml" },
+                { "index", "Index" },
+            };
+
+            foreach (var item in map)
+                name = name.Replace(item.Key, item.Value);
+
+            return name.ToCamelCase();
+        }
+
+        public bool IsKnownNativeType(string type)
+        {
+            if (_registeredTypes.Any(rt => rt == CleanType(type)))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public string MapToManagedApiType(string type)
+        {
+            if (IsKnownNativeType(type))
+            {
+                return ToApiName(CleanType(type));
+            }
+
+            type = MapToManagedType(type);
+            if (type.Contains("/*usize_t*/")) return nameof(UInt64);
+            if (type.Contains("/*size_t*/"))  return nameof(Int64);
+            if (type.Contains("/*bool*/")) return nameof(Boolean);
+
+            return type;
+        }
+
+        public bool NeedsCastForApi(string nativeType, out string cast)
+        {
+            var managedType = MapToManagedType(nativeType);
+            if (!managedType.Contains("/*") || nativeType == "bool")
+            {
+                cast = null;
+                return false;
+            }
+
+            cast = $"({MapToManagedApiType(nativeType)})";
+            return true;
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace CppPinvokeGenerator
 {
@@ -12,6 +13,8 @@ namespace CppPinvokeGenerator
         private int _bodyCalls;
         private int _definedParametersCount;
         private int _passedParametersCount;
+        private bool _expressionBodySyntax;
+        private bool _baseCtor;
 
         public FunctionWriter Attribute(string attribute)
         {
@@ -43,8 +46,9 @@ namespace CppPinvokeGenerator
             return this;
         }
 
-        public FunctionWriter ReturnType(string type, string wrapWith = null)
+        public FunctionWriter ReturnType(string type, string wrapWith = null, int padding = 0)
         {
+            int preLength = _sb.Length;
             if (wrapWith != null)
                 _sb.Append(wrapWith).Append("(");
 
@@ -58,6 +62,19 @@ namespace CppPinvokeGenerator
             if (type != null)
                 _sb.Append(" ");
 
+            var toPad = padding - (_sb.Length - preLength);
+            if (toPad > 0)
+                _sb.Append(new string(' ', toPad));
+
+            return this;
+        }
+
+        public FunctionWriter BaseCtor(params string[] values)
+        {
+            _baseCtor = true;
+            if (_definedParametersCount > 0)
+                _sb.RemoveEnd(", ".Length);
+            _sb.Append(") : base(" + string.Join(", ", values));
             return this;
         }
 
@@ -80,15 +97,25 @@ namespace CppPinvokeGenerator
 
         public string BuildWithoutBody()
         {
-            if (_definedParametersCount > 0)
+            if (_definedParametersCount > 0 && !_baseCtor)
                 _sb.RemoveEnd(", ".Length);
             _sb.Append(");");
             return _sb.ToString();
         }
 
+        public FunctionWriter StartExpressionBody()
+        {
+            _expressionBodySyntax = true;
+            if (_definedParametersCount > 0 && !_baseCtor)
+                _sb.RemoveEnd(", ".Length);
+            _sb.Append(") => ");
+
+            return this;
+        }
+
         public FunctionWriter BodyStart()
         {
-            if (_definedParametersCount > 0)
+            if (_definedParametersCount > 0 && !_baseCtor)
                 _sb.RemoveEnd(", ".Length);
             _sb.Append(") { ");
 
@@ -118,15 +145,43 @@ namespace CppPinvokeGenerator
             return this;
         }
 
-        public string Build()
+        public string Build(string expression = null)
         {
             if (_passedParametersCount > 0)
                 _sb.RemoveEnd(2);
             for (int i = 0; i < _bodyCalls; i++)
                 _sb.Append(")");
 
-            _sb.Append("; }");
+            if (expression != null)
+                _sb.Append(expression);
+
+            _sb.Append(";");
+            if (!_expressionBodySyntax)
+                _sb.Append(" }");
             return _sb.ToString();
+        }
+
+        public FunctionWriter SummaryComment(string comments)
+        {
+            if (string.IsNullOrWhiteSpace(comments))
+                return this;
+
+            _sb.AppendLine("/// <summary>");
+
+            if (!string.IsNullOrWhiteSpace(comments))
+                foreach (var commentLine in comments.Split(new [] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries))
+                    _sb.Append("/// ").AppendLine(commentLine);
+
+            _sb.AppendLine("/// </summary>");
+            return this;
+        }
+
+        public FunctionWriter SimpleComment(string comments)
+        {
+            if (!string.IsNullOrWhiteSpace(comments))
+                foreach (var commentLine in comments.Split('\n'))
+                    _sb.Append("// ").AppendLine(commentLine);
+            return this;
         }
     }
 }

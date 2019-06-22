@@ -1,5 +1,9 @@
 ﻿    public unsafe static partial class %CLASS_NAME%
     {
+        #region API
+%API%
+        #endregion
+
         #region DllImports
 %DLLIMPORTS%
         #endregion

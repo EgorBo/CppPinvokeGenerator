@@ -10,6 +10,8 @@ namespace CppPinvokeGenerator
     {
         public static bool IsVoid(this CppType type) => type.GetDisplayName() == "void";
 
+        public static bool IsBool(this CppType type) => type.GetDisplayName() == "bool";
+
         public static bool IsOperator(this CppFunction func) => func.Name.StartsWith("operator"); // TODO: regex?
 
         public static bool IsStatic(this CppFunction func) => func.StorageQualifier == CppStorageQualifier.Static;

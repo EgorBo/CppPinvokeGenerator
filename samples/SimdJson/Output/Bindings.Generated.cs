@@ -1,4 +1,4 @@
-﻿// This file is auto-generated. Do not edit.
+﻿// This file is auto-generated (EgorBo/CppPinvokeGenerator). Do not edit.
 
 using System;
 using System.Runtime.InteropServices;
@@ -6,7 +6,7 @@ using Microsoft.Win32.SafeHandles;
 
 namespace SimdJsonSharp
 {
-﻿    public unsafe partial class padded_string : SafeHandleZeroOrMinusOneIsInvalid
+﻿    public unsafe partial class PaddedString : SafeHandleZeroOrMinusOneIsInvalid
     {
         #region Handle
         /// <summary>
@@ -15,14 +15,28 @@ namespace SimdJsonSharp
         public IntPtr Handle => DangerousGetHandle();
 
         /// <summary>
-        /// Create padded_string from a native pointer
+        /// Create PaddedString from a native pointer
         /// ownsHandle=false means GC won't delete the underlying native object if this C# wrapper goes out of scope
         /// </summary>
-        public padded_string(IntPtr handle, bool ownsHandle = true) : base(ownsHandle) => SetHandle(handle);
+        public PaddedString(IntPtr handle, bool ownsHandle) : base(ownsHandle) => SetHandle(handle);
         #endregion
 
         #region API
-//TODO: %API%
+        public PaddedString() : base(ownsHandle: true) => padded_string_padded_string_0();
+
+        public PaddedString(Int64 length) : base(ownsHandle: true) => padded_string_padded_string_s((IntPtr)length);
+
+        public PaddedString(SByte* data, Int64 length) : base(ownsHandle: true) => padded_string_padded_string_cs(data, (IntPtr)length);
+
+        public PaddedString(PaddedString o) : base(ownsHandle: true) => padded_string_padded_string_p((o == null ? IntPtr.Zero : o.Handle));
+
+        public void Swap(PaddedString o) => padded_string_swap_p(Handle, (o == null ? IntPtr.Zero : o.Handle));
+
+        public Int64 Size() => (Int64)(padded_string_size_0(Handle));
+
+        public Int64 Length() => (Int64)(padded_string_length_0(Handle));
+
+        public SByte* Data() => padded_string_data_0(Handle);
         #endregion
 
         #region DllImports
@@ -75,11 +89,52 @@ namespace SimdJsonSharp
         /// Create ParsedJson from a native pointer
         /// ownsHandle=false means GC won't delete the underlying native object if this C# wrapper goes out of scope
         /// </summary>
-        public ParsedJson(IntPtr handle, bool ownsHandle = true) : base(ownsHandle) => SetHandle(handle);
+        public ParsedJson(IntPtr handle, bool ownsHandle) : base(ownsHandle) => SetHandle(handle);
         #endregion
 
         #region API
-//TODO: %API%
+        /// <summary>
+        /// create a ParsedJson container with zero capacity, call allocateCapacity to
+        /// allocate memory
+        /// </summary>
+        public ParsedJson() : base(ownsHandle: true) => ParsedJson_ParsedJson_0();
+
+        /// <summary>
+        /// we don't want the default constructor to be called
+        /// </summary>
+        public ParsedJson(ParsedJson p) : base(ownsHandle: true) => ParsedJson_ParsedJson_P((p == null ? IntPtr.Zero : p.Handle));
+
+        /// <summary>
+        /// if needed, allocate memory so that the object is able to process JSON
+        /// documents having up to len bytes and maxdepth "depth"
+        /// </summary>
+        public Boolean AllocateCapacity(Int64 len, Int64 maxdepth) => ParsedJson_allocateCapacity_ss(Handle, (IntPtr)len, (IntPtr)maxdepth) > 0;
+
+        public Boolean IsValid() => ParsedJson_isValid_0(Handle) > 0;
+
+        /// <summary>
+        /// deallocate memory and set capacity to zero, called automatically by the
+        /// destructor
+        /// </summary>
+        public void Deallocate() => ParsedJson_deallocate_0(Handle);
+
+        /// <summary>
+        /// this should be called when parsing (right before writing the tapes)
+        /// </summary>
+        public void Init() => ParsedJson_init_0(Handle);
+
+        /// <summary>
+        /// this should be considered a private function
+        /// </summary>
+        public void WriteTape(UInt64 val, Byte c) => ParsedJson_write_tape_uu(Handle, val, c);
+
+        public void WriteTapeS64(Int64 i) => ParsedJson_write_tape_s64_i(Handle, i);
+
+        public void WriteTapeDouble(Double d) => ParsedJson_write_tape_double_d(Handle, d);
+
+        public UInt32 GetCurrentLoc() => ParsedJson_get_current_loc_0(Handle);
+
+        public void AnnotatePreviousloc(UInt32 saved_loc, UInt64 val) => ParsedJson_annotate_previousloc_uu(Handle, saved_loc, val);
         #endregion
 
         #region DllImports
@@ -90,10 +145,10 @@ namespace SimdJsonSharp
         private static extern IntPtr ParsedJson_ParsedJson_P(IntPtr p);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte ParsedJson_allocateCapacity_ss(IntPtr target, IntPtr/*size_t*/ len, IntPtr/*size_t*/ maxdepth);
+        private static extern Byte/*bool*/ ParsedJson_allocateCapacity_ss(IntPtr target, IntPtr/*size_t*/ len, IntPtr/*size_t*/ maxdepth);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte ParsedJson_isValid_0(IntPtr target);
+        private static extern Byte/*bool*/ ParsedJson_isValid_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern void ParsedJson_deallocate_0(IntPtr target);
@@ -129,7 +184,7 @@ namespace SimdJsonSharp
         #endregion
     }
 
-﻿    public unsafe partial class InvalidJSON : SafeHandleZeroOrMinusOneIsInvalid
+﻿    public unsafe partial class InvalidJson : SafeHandleZeroOrMinusOneIsInvalid
     {
         #region Handle
         /// <summary>
@@ -138,14 +193,14 @@ namespace SimdJsonSharp
         public IntPtr Handle => DangerousGetHandle();
 
         /// <summary>
-        /// Create InvalidJSON from a native pointer
+        /// Create InvalidJson from a native pointer
         /// ownsHandle=false means GC won't delete the underlying native object if this C# wrapper goes out of scope
         /// </summary>
-        public InvalidJSON(IntPtr handle, bool ownsHandle = true) : base(ownsHandle) => SetHandle(handle);
+        public InvalidJson(IntPtr handle, bool ownsHandle) : base(ownsHandle) => SetHandle(handle);
         #endregion
 
         #region API
-//TODO: %API%
+        public SByte* What() => InvalidJSON_what_0(Handle);
         #endregion
 
         #region DllImports
@@ -165,7 +220,7 @@ namespace SimdJsonSharp
         #endregion
     }
 
-﻿    public unsafe partial class iterator : SafeHandleZeroOrMinusOneIsInvalid
+﻿    public unsafe partial class Iterator : SafeHandleZeroOrMinusOneIsInvalid
     {
         #region Handle
         /// <summary>
@@ -174,14 +229,145 @@ namespace SimdJsonSharp
         public IntPtr Handle => DangerousGetHandle();
 
         /// <summary>
-        /// Create iterator from a native pointer
+        /// Create Iterator from a native pointer
         /// ownsHandle=false means GC won't delete the underlying native object if this C# wrapper goes out of scope
         /// </summary>
-        public iterator(IntPtr handle, bool ownsHandle = true) : base(ownsHandle) => SetHandle(handle);
+        public Iterator(IntPtr handle, bool ownsHandle) : base(ownsHandle) => SetHandle(handle);
         #endregion
 
         #region API
-//TODO: %API%
+        /// <summary>
+        /// might throw InvalidJSON if ParsedJson is invalid
+        /// </summary>
+        public Iterator(ParsedJson pj_) : base(ownsHandle: true) => iterator_iterator_P((pj_ == null ? IntPtr.Zero : pj_.Handle));
+
+        public Iterator(Iterator o) : base(ownsHandle: true) => iterator_iterator_i((o == null ? IntPtr.Zero : o.Handle));
+
+        public Boolean IsOk() => iterator_isOk_0(Handle) > 0;
+
+        /// <summary>
+        /// useful for debuging purposes
+        /// </summary>
+        public Int64 GetTapeLocation() => (Int64)(iterator_get_tape_location_0(Handle));
+
+        /// <summary>
+        /// useful for debuging purposes
+        /// </summary>
+        public Int64 GetTapeLength() => (Int64)(iterator_get_tape_length_0(Handle));
+
+        /// <summary>
+        /// returns the current depth (start at 1 with 0 reserved for the fictitious root node)
+        /// </summary>
+        public Int64 GetDepth() => (Int64)(iterator_get_depth_0(Handle));
+
+        /// <summary>
+        /// A scope is a series of nodes at the same depth, typically it is either an object ({) or an array ([).
+        /// The root node has type 'r'.
+        /// </summary>
+        public Byte GetScopeType() => iterator_get_scope_type_0(Handle);
+
+        /// <summary>
+        /// move forward in document order
+        /// </summary>
+        public Boolean MoveForward() => iterator_move_forward_0(Handle) > 0;
+
+        /// <summary>
+        /// retrieve the character code of what we're looking at:
+        /// [{"sltfn are the possibilities
+        /// </summary>
+        public Byte GetType() => iterator_get_type_0(Handle);
+
+        /// <summary>
+        /// get the int64_t value at this node; valid only if we're at "l"
+        /// </summary>
+        public Int64 GetInteger() => iterator_get_integer_0(Handle);
+
+        /// <summary>
+        /// get the string value at this node (NULL ended); valid only if we're at "
+        /// note that tabs, and line endings are escaped in the returned value (see print_with_escapes)
+        /// return value is valid UTF-8
+        /// It may contain NULL chars within the string: get_string_length determines the true 
+        /// string length.
+        /// </summary>
+        public SByte* GetString() => iterator_get_string_0(Handle);
+
+        public UInt32 GetStringLength() => iterator_get_string_length_0(Handle);
+
+        /// <summary>
+        /// get the double value at this node; valid only if
+        /// we're at "d"
+        /// </summary>
+        public Double GetDouble() => iterator_get_double_0(Handle);
+
+        public Boolean IsObjectOrArray() => iterator_is_object_or_array_0(Handle) > 0;
+
+        public Boolean IsObject() => iterator_is_object_0(Handle) > 0;
+
+        public Boolean IsArray() => iterator_is_array_0(Handle) > 0;
+
+        public Boolean IsString() => iterator_is_string_0(Handle) > 0;
+
+        public Boolean IsInteger() => iterator_is_integer_0(Handle) > 0;
+
+        public Boolean IsDouble() => iterator_is_double_0(Handle) > 0;
+
+        public Boolean IsTrue() => iterator_is_true_0(Handle) > 0;
+
+        public Boolean IsFalse() => iterator_is_false_0(Handle) > 0;
+
+        public Boolean IsNull() => iterator_is_null_0(Handle) > 0;
+
+        public static Boolean IsObjectOrArray(Byte type) => iterator_is_object_or_array_u(type) > 0;
+
+        /// <summary>
+        /// when at {, go one level deep, looking for a given key
+        /// if successful, we are left pointing at the value,
+        /// if not, we are still pointing at the object ({)
+        /// (in case of repeated keys, this only finds the first one)
+        /// We seek the key using C's strcmp so if your JSON strings contain
+        /// NULL chars, this would trigger a false positive: if you expect that
+        /// to be the case, take extra precautions.
+        /// </summary>
+        public Boolean MoveToKey(SByte* key) => iterator_move_to_key_c(Handle, key) > 0;
+
+        /// <summary>
+        /// Withing a given scope (series of nodes at the same depth within either an
+        /// array or an object), we move forward.
+        /// Thus, given [true, null, {"a":1}, [1,2]], we would visit true, null, { and [.
+        /// At the object ({) or at the array ([), you can issue a "down" to visit their content.
+        /// valid if we're not at the end of a scope (returns true).
+        /// </summary>
+        public Boolean Next() => iterator_next_0(Handle) > 0;
+
+        /// <summary>
+        /// Withing a given scope (series of nodes at the same depth within either an
+        /// array or an object), we move backward.
+        /// Thus, given [true, null, {"a":1}, [1,2]], we would visit ], }, null, true when starting at the end
+        /// of the scope.
+        /// At the object ({) or at the array ([), you can issue a "down" to visit their content.
+        /// </summary>
+        public Boolean Prev() => iterator_prev_0(Handle) > 0;
+
+        /// <summary>
+        /// Moves back to either the containing array or object (type { or [) from
+        /// within a contained scope.
+        /// Valid unless we are at the first level of the document
+        /// </summary>
+        public Boolean Up() => iterator_up_0(Handle) > 0;
+
+        /// <summary>
+        /// Valid if we're at a [ or { and it starts a non-empty scope; moves us to start of
+        /// that deeper scope if it not empty.
+        /// Thus, given [true, null, {"a":1}, [1,2]], if we are at the { node, we would move to the
+        /// "a" node.
+        /// </summary>
+        public Boolean Down() => iterator_down_0(Handle) > 0;
+
+        /// <summary>
+        /// move us to the start of our current scope,
+        /// a scope is a series of nodes at the same level
+        /// </summary>
+        public void ToStartScope() => iterator_to_start_scope_0(Handle);
         #endregion
 
         #region DllImports
@@ -192,7 +378,7 @@ namespace SimdJsonSharp
         private static extern IntPtr iterator_iterator_i(IntPtr o);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_isOk_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_isOk_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr/*size_t*/ iterator_get_tape_location_0(IntPtr target);
@@ -207,7 +393,7 @@ namespace SimdJsonSharp
         private static extern Byte iterator_get_scope_type_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_move_forward_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_move_forward_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern Byte iterator_get_type_0(IntPtr target);
@@ -225,49 +411,49 @@ namespace SimdJsonSharp
         private static extern Double iterator_get_double_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_object_or_array_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_object_or_array_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_object_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_object_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_array_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_array_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_string_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_string_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_integer_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_integer_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_double_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_double_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_true_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_true_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_false_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_false_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_null_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_is_null_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_is_object_or_array_u(Byte type);
+        private static extern Byte/*bool*/ iterator_is_object_or_array_u(Byte type);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_move_to_key_c(IntPtr target, SByte* key);
+        private static extern Byte/*bool*/ iterator_move_to_key_c(IntPtr target, SByte* key);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_next_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_next_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_prev_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_prev_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_up_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_up_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte iterator_down_0(IntPtr target);
+        private static extern Byte/*bool*/ iterator_down_0(IntPtr target);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern void iterator_to_start_scope_0(IntPtr target);
@@ -285,7 +471,7 @@ namespace SimdJsonSharp
         #endregion
     }
 
-﻿    public unsafe partial class scopeindex_t : SafeHandleZeroOrMinusOneIsInvalid
+﻿    public unsafe partial class ScopeIndexT : SafeHandleZeroOrMinusOneIsInvalid
     {
         #region Handle
         /// <summary>
@@ -294,14 +480,14 @@ namespace SimdJsonSharp
         public IntPtr Handle => DangerousGetHandle();
 
         /// <summary>
-        /// Create scopeindex_t from a native pointer
+        /// Create ScopeIndexT from a native pointer
         /// ownsHandle=false means GC won't delete the underlying native object if this C# wrapper goes out of scope
         /// </summary>
-        public scopeindex_t(IntPtr handle, bool ownsHandle = true) : base(ownsHandle) => SetHandle(handle);
+        public ScopeIndexT(IntPtr handle, bool ownsHandle) : base(ownsHandle) => SetHandle(handle);
         #endregion
 
         #region API
-//TODO: %API%
+
         #endregion
 
         #region DllImports
@@ -322,12 +508,208 @@ namespace SimdJsonSharp
 
 ﻿    public unsafe static partial class GlobalFunctions
     {
+        #region API
+        public static Boolean AddOverflow(UInt64 value1, UInt64 value2, UInt64* result) => _add_overflow_uuu(value1, value2, result) > 0;
+
+        public static Boolean MulOverflow(UInt64 value1, UInt64 value2, UInt64* result) => _mul_overflow_uuu(value1, value2, result) > 0;
+
+        public static Int32 Trailingzeroes(UInt64 input_num) => _trailingzeroes_u(input_num);
+
+        public static Int32 Leadingzeroes(UInt64 input_num) => _leadingzeroes_u(input_num);
+
+        public static Int32 Hamming(UInt64 input_num) => _hamming_u(input_num);
+
+        /// <summary>
+        /// portable version of  posix_memalign
+        /// </summary>
+        public static void* AlignedMalloc(Int64 alignment, Int64 size) => _aligned_malloc_ss((IntPtr)alignment, (IntPtr)size);
+
+        public static SByte* AlignedMallocChar(Int64 alignment, Int64 size) => _aligned_malloc_char_ss((IntPtr)alignment, (IntPtr)size);
+
+        public static void AlignedFree(void* memblock) => _aligned_free_v(memblock);
+
+        public static void AlignedFreeChar(SByte* memblock) => _aligned_free_char_c(memblock);
+
+        /// <summary>
+        /// low-level function to allocate memory with padding so we can read passed the
+        /// "length" bytes safely. if you must provide a pointer to some data, create it
+        /// with this function: length is the max. size in bytes of the string caller is
+        /// responsible to free the memory (free(...))
+        /// </summary>
+        public static SByte* AllocatePaddedBuffer(Int64 length) => _allocate_padded_buffer_s((IntPtr)length);
+
+        /// <summary>
+        /// return non-zero if not a structural or whitespace char
+        /// zero otherwise
+        /// </summary>
+        public static UInt32 IsNotStructuralOrWhitespace(Byte c) => _is_not_structural_or_whitespace_u(c);
+
+        public static UInt32 IsStructuralOrWhitespace(Byte c) => _is_structural_or_whitespace_u(c);
+
+        /// <summary>
+        /// returns a value with the high 16 bits set if not valid
+        /// otherwise returns the conversion of the 4 hex digits at src into the bottom 16 bits of the 32-bit
+        /// return register
+        /// see https://lemire.me/blog/2019/04/17/parsing-short-hexadecimal-strings-efficiently/ 
+        /// </summary>
+        public static UInt32 HexToU32Nocheck(Byte* src) => _hex_to_u32_nocheck_u(src);
+
+        /// <summary>
+        /// given a code point cp, writes to c
+        /// the utf-8 code, outputting the length in
+        /// bytes, if the length is zero, the code point
+        /// is invalid
+        /// This can possibly be made faster using pdep
+        /// and clz and table lookups, but JSON documents
+        /// have few escaped code points, and the following
+        /// function looks cheap.
+        /// Note: we assume that surrogates are treated separately
+        /// </summary>
+        public static Int64 CodepointToUtf8(UInt32 cp, Byte* c) => (Int64)(_codepoint_to_utf8_uu(cp, c));
+
+        /// <summary>
+        /// ends with zero char
+        /// </summary>
+        public static void PrintWithEscapes(Byte* src) => _print_with_escapes_u(src);
+
+        /// <summary>
+        /// print len chars
+        /// </summary>
+        public static void PrintWithEscapes(Byte* src, Int64 len) => _print_with_escapes_us(src, (IntPtr)len);
+
+        /// <summary>
+        /// Take input from buf and remove useless whitespace, write it to out; buf and
+        /// out can be the same pointer. Result is null terminated,
+        /// return the string length (minus the null termination).
+        /// </summary>
+        public static Int64 Jsonminify(Byte* buf, Int64 len, Byte* @out) => (Int64)(_jsonminify_usu(buf, (IntPtr)len, @out));
+
+        public static Int64 Jsonminify(SByte* buf, Int64 len, SByte* @out) => (Int64)(_jsonminify_csc(buf, (IntPtr)len, @out));
+
+        public static Int64 Jsonminify(PaddedString p, SByte* @out) => (Int64)(_jsonminify_pc((p == null ? IntPtr.Zero : p.Handle), @out));
+
+        public static Boolean FindStructuralBits(Byte* buf, Int64 len, ParsedJson pj) => _find_structural_bits_usP(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle)) > 0;
+
+        public static Boolean FindStructuralBits(SByte* buf, Int64 len, ParsedJson pj) => _find_structural_bits_csP(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle)) > 0;
+
+        /// <summary>
+        /// handle a unicode codepoint
+        /// write appropriate values into dest
+        /// src will advance 6 bytes or 12 bytes
+        /// dest will advance a variable amount (return via pointer)
+        /// return true if the unicode codepoint was valid
+        /// We work in little-endian then swap at write time
+        /// </summary>
+        public static Boolean HandleUnicodeCodepoint(Byte* src_ptr, Byte* dst_ptr) => _handle_unicode_codepoint_uu(src_ptr, dst_ptr) > 0;
+
+        public static Boolean ParseString(Byte* buf, Int64 len, ParsedJson pj, UInt32 depth, UInt32 offset) => _parse_string_usPuu(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle), depth, offset) > 0;
+
+        public static Boolean IsInteger(SByte c) => _is_integer_c(c) > 0;
+
+        public static Boolean IsNotStructuralOrWhitespaceOrExponentOrDecimalOrNull(Byte c) => _is_not_structural_or_whitespace_or_exponent_or_decimal_or_null_u(c) > 0;
+
+        /// <summary>
+        /// called by parse_number when we know that the output is a float,
+        /// but where there might be some integer overflow. The trick here is to
+        /// parse using floats from the start.
+        /// Do not call this function directly as it skips some of the checks from
+        /// parse_number
+        /// This function will almost never be called!!!
+        /// Note: a redesign could avoid this function entirely.
+        /// </summary>
+        public static Boolean ParseFloat(Byte* buf, ParsedJson pj, UInt32 offset, Boolean found_minus) => _parse_float_uPub(buf, (pj == null ? IntPtr.Zero : pj.Handle), offset, (Byte)(found_minus ? 1 : 0)) > 0;
+
+        /// <summary>
+        /// called by parse_number when we know that the output is an integer,
+        /// but where there might be some integer overflow.
+        /// we want to catch overflows!
+        /// Do not call this function directly as it skips some of the checks from
+        /// parse_number
+        /// This function will almost never be called!!!
+        /// </summary>
+        public static Boolean ParseLargeInteger(Byte* buf, ParsedJson pj, UInt32 offset, Boolean found_minus) => _parse_large_integer_uPub(buf, (pj == null ? IntPtr.Zero : pj.Handle), offset, (Byte)(found_minus ? 1 : 0)) > 0;
+
+        /// <summary>
+        /// parse the number at buf + offset
+        /// define JSON_TEST_NUMBERS for unit testing
+        /// </summary>
+        public static Boolean ParseNumber(Byte* buf, ParsedJson pj, UInt32 offset, Boolean found_minus) => _parse_number_uPub(buf, (pj == null ? IntPtr.Zero : pj.Handle), offset, (Byte)(found_minus ? 1 : 0)) > 0;
+
+        public static void InitStateMachine() => _init_state_machine_0();
+
+        public static Int32 UnifiedMachine(Byte* buf, Int64 len, ParsedJson pj) => _unified_machine_usP(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle));
+
+        public static Int32 UnifiedMachine(SByte* buf, Int64 len, ParsedJson pj) => _unified_machine_csP(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle));
+
+        /// <summary>
+        /// Parse a document found in buf. 
+        /// You need to preallocate ParsedJson with a capacity of len (e.g., pj.allocateCapacity(len)).
+        /// Return 0 on success, an error code from simdjson/simdjson.h otherwise
+        /// You can also check validity by calling pj.isValid(). The same ParsedJson can be reused for other documents.
+        /// If reallocifneeded is true (default) then a temporary buffer is created when needed during processing
+        /// (a copy of the input string is made).
+        /// The input buf should be readable up to buf + len + SIMDJSON_PADDING if reallocifneeded is false,
+        /// all bytes at and after buf + len  are ignored (can be garbage).
+        /// The ParsedJson object can be reused.
+        /// </summary>
+        public static Int32 JsonParse(Byte* buf, Int64 len, ParsedJson pj, Boolean reallocifneeded) => _json_parse_usPb(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle), (Byte)(reallocifneeded ? 1 : 0));
+
+        /// <summary>
+        /// Parse a document found in buf.
+        /// You need to preallocate ParsedJson with a capacity of len (e.g., pj.allocateCapacity(len)).
+        /// Return SUCCESS (an integer = 1) in case of a success. You can also check validity
+        /// by calling pj.isValid(). The same ParsedJson can be reused for other documents.
+        /// If reallocifneeded is true (default) then a temporary buffer is created when needed during processing
+        /// (a copy of the input string is made).
+        /// The input buf should be readable up to buf + len + SIMDJSON_PADDING  if reallocifneeded is false,
+        /// all bytes at and after buf + len  are ignored (can be garbage).
+        /// The ParsedJson object can be reused.
+        /// </summary>
+        public static Int32 JsonParse(SByte* buf, Int64 len, ParsedJson pj, Boolean reallocifneeded) => _json_parse_csPb(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle), (Byte)(reallocifneeded ? 1 : 0));
+
+        /// <summary>
+        /// Parse a document found in in string s.
+        /// You need to preallocate ParsedJson with a capacity of len (e.g., pj.allocateCapacity(len)).
+        /// Return SUCCESS (an integer = 1) in case of a success. You can also check validity
+        /// by calling pj.isValid(). The same ParsedJson can be reused for other documents.
+        /// </summary>
+        public static Int32 JsonParse(PaddedString s, ParsedJson pj) => _json_parse_pP((s == null ? IntPtr.Zero : s.Handle), (pj == null ? IntPtr.Zero : pj.Handle));
+
+        /// <summary>
+        /// Build a ParsedJson object. You can check validity
+        /// by calling pj.isValid(). This does the memory allocation needed for ParsedJson.
+        /// If reallocifneeded is true (default) then a temporary buffer is created when needed during processing
+        /// (a copy of the input string is made).
+        /// the input buf should be readable up to buf + len + SIMDJSON_PADDING  if reallocifneeded is false,
+        /// all bytes at and after buf + len  are ignored (can be garbage).
+        /// </summary>
+        public static ParsedJson BuildParsedJson(Byte* buf, Int64 len, Boolean reallocifneeded) => new ParsedJson((_build_parsed_json_usb(buf, (IntPtr)len, (Byte)(reallocifneeded ? 1 : 0))), false);
+
+        /// <summary>
+        /// Build a ParsedJson object. You can check validity
+        /// by calling pj.isValid(). This does the memory allocation needed for ParsedJson.
+        /// If reallocifneeded is true (default) then a temporary buffer is created when needed during processing
+        /// (a copy of the input string is made).
+        /// The input buf should be readable up to buf + len + SIMDJSON_PADDING if reallocifneeded is false,
+        /// all bytes at and after buf + len  are ignored (can be garbage).
+        /// </summary>
+        public static ParsedJson BuildParsedJson(SByte* buf, Int64 len, Boolean reallocifneeded) => new ParsedJson((_build_parsed_json_csb(buf, (IntPtr)len, (Byte)(reallocifneeded ? 1 : 0))), false);
+
+        /// <summary>
+        /// Parse a document found in in string s.
+        /// You need to preallocate ParsedJson with a capacity of len (e.g., pj.allocateCapacity(len)).
+        /// Return SUCCESS (an integer = 1) in case of a success. You can also check validity
+        /// by calling pj.isValid(). The same ParsedJson can be reused for other documents.
+        /// </summary>
+        public static ParsedJson BuildParsedJson(PaddedString s) => new ParsedJson((_build_parsed_json_p((s == null ? IntPtr.Zero : s.Handle))), false);
+        #endregion
+
         #region DllImports
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _add_overflow_uuu(UInt64 value1, UInt64 value2, UInt64* result);
+        private static extern Byte/*bool*/ _add_overflow_uuu(UInt64 value1, UInt64 value2, UInt64* result);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _mul_overflow_uuu(UInt64 value1, UInt64 value2, UInt64* result);
+        private static extern Byte/*bool*/ _mul_overflow_uuu(UInt64 value1, UInt64 value2, UInt64* result);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern Int32 _trailingzeroes_u(UInt64 input_num);
@@ -381,31 +763,31 @@ namespace SimdJsonSharp
         private static extern IntPtr/*size_t*/ _jsonminify_pc(IntPtr p, SByte* @out);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _find_structural_bits_usP(Byte* buf, IntPtr/*size_t*/ len, IntPtr pj);
+        private static extern Byte/*bool*/ _find_structural_bits_usP(Byte* buf, IntPtr/*size_t*/ len, IntPtr pj);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _find_structural_bits_csP(SByte* buf, IntPtr/*size_t*/ len, IntPtr pj);
+        private static extern Byte/*bool*/ _find_structural_bits_csP(SByte* buf, IntPtr/*size_t*/ len, IntPtr pj);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _handle_unicode_codepoint_uu(Byte* src_ptr, Byte* dst_ptr);
+        private static extern Byte/*bool*/ _handle_unicode_codepoint_uu(Byte* src_ptr, Byte* dst_ptr);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _parse_string_usPuu(Byte* buf, IntPtr/*size_t*/ len, IntPtr pj, UInt32 depth, UInt32 offset);
+        private static extern Byte/*bool*/ _parse_string_usPuu(Byte* buf, IntPtr/*size_t*/ len, IntPtr pj, UInt32 depth, UInt32 offset);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _is_integer_c(SByte c);
+        private static extern Byte/*bool*/ _is_integer_c(SByte c);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _is_not_structural_or_whitespace_or_exponent_or_decimal_or_null_u(Byte c);
+        private static extern Byte/*bool*/ _is_not_structural_or_whitespace_or_exponent_or_decimal_or_null_u(Byte c);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _parse_float_uPub(Byte* buf, IntPtr pj, UInt32 offset, Byte found_minus);
+        private static extern Byte/*bool*/ _parse_float_uPub(Byte* buf, IntPtr pj, UInt32 offset, Byte/*bool*/ found_minus);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _parse_large_integer_uPub(Byte* buf, IntPtr pj, UInt32 offset, Byte found_minus);
+        private static extern Byte/*bool*/ _parse_large_integer_uPub(Byte* buf, IntPtr pj, UInt32 offset, Byte/*bool*/ found_minus);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Byte _parse_number_uPub(Byte* buf, IntPtr pj, UInt32 offset, Byte found_minus);
+        private static extern Byte/*bool*/ _parse_number_uPub(Byte* buf, IntPtr pj, UInt32 offset, Byte/*bool*/ found_minus);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern void _init_state_machine_0();
@@ -417,19 +799,19 @@ namespace SimdJsonSharp
         private static extern Int32 _unified_machine_csP(SByte* buf, IntPtr/*size_t*/ len, IntPtr pj);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Int32 _json_parse_usPb(Byte* buf, IntPtr/*size_t*/ len, IntPtr pj, Byte reallocifneeded);
+        private static extern Int32 _json_parse_usPb(Byte* buf, IntPtr/*size_t*/ len, IntPtr pj, Byte/*bool*/ reallocifneeded);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern Int32 _json_parse_csPb(SByte* buf, IntPtr/*size_t*/ len, IntPtr pj, Byte reallocifneeded);
+        private static extern Int32 _json_parse_csPb(SByte* buf, IntPtr/*size_t*/ len, IntPtr pj, Byte/*bool*/ reallocifneeded);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern Int32 _json_parse_pP(IntPtr s, IntPtr pj);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr _build_parsed_json_usb(Byte* buf, IntPtr/*size_t*/ len, Byte reallocifneeded);
+        private static extern IntPtr _build_parsed_json_usb(Byte* buf, IntPtr/*size_t*/ len, Byte/*bool*/ reallocifneeded);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr _build_parsed_json_csb(SByte* buf, IntPtr/*size_t*/ len, Byte reallocifneeded);
+        private static extern IntPtr _build_parsed_json_csb(SByte* buf, IntPtr/*size_t*/ len, Byte/*bool*/ reallocifneeded);
 
         [DllImport(SimdJsonN.NativeLib, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _build_parsed_json_p(IntPtr s);
