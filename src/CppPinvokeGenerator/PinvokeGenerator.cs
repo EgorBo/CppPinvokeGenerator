@@ -21,6 +21,15 @@ namespace CppPinvokeGenerator
             var cFileSb = new StringBuilder();
             foreach (CppClassContainer cppClass in mapper.GetAllClasses())
             {
+                int methodsBound = 0;
+                int ctors = 0;
+
+                cFileSb.AppendLine();
+                cFileSb.AppendLine(cppClass.IsGlobal
+                    ? $"/************* Global functions: *************/"
+                    : $"/************* Type: {cppClass.Class.GetFullTypeName()} *************/");
+                cFileSb.AppendLine();
+
                 var csClassSb = new StringBuilder();
                 List<CppFunction> allFunctions = cppClass.Functions;
                 for (int i = 0; i < allFunctions.Count; i++)
@@ -31,10 +40,15 @@ namespace CppPinvokeGenerator
                         !function.Parameters.All(p => mapper.IsSupported(p.Type.GetDisplayName())) ||
                         function.IsOperator())
                     {
+                        cFileSb.AppendLine($"//NOT_BOUND:  " + function).AppendLine();
                         Logger.LogWarning($"Ignoring {function.Name}");
                         // we can't bind this method (yet)
                         continue;
                     }
+
+                    if (function.IsConstructor)
+                        ctors++;
+                    methodsBound++;
 
                     // Type_MethodName1
                     string flatFunctionName = $"{cppClass.Name}_{function.Name}{i}";
@@ -125,7 +139,33 @@ namespace CppPinvokeGenerator
                 if (cppClass.IsGlobal && generateCForGlobalFunctions)
                     csFileSb.Append(templateManager.CSharpGlobalClass(csClassSb.ToString(), dllImportPath));
                 else if (!cppClass.IsGlobal)
+                {
                     csFileSb.Append(templateManager.CSharpClass(cppClass.Name, cppClass.Name, csClassSb.ToString(), dllImportPath));
+
+                    // Append "delete" method:
+                    // EXPORTS(void) %class%_delete(%class%* target) { if (target) delete target; }
+                    var cfunctionWriter = new FunctionWriter();
+                    cfunctionWriter.ReturnType("[EXPORT(void)]")
+                        .MethodName(cppClass.Name + "__delete")
+                        .Parameter(cppClass.Class.GetFullTypeName() + "*", "target")
+                        .BodyStart()
+                        .Body("delete target");
+                    cFileSb
+                        .AppendLine(cfunctionWriter.Build());
+
+                    // default ctor
+                    //if (ctors < 1)
+                    //{
+                    //    cfunctionWriter = new FunctionWriter();
+                    //    cfunctionWriter.ReturnType($"[EXPORT({cppClass.Class.GetFullTypeName()}*)]")
+                    //        .MethodName(cppClass.Name + "_" + cppClass.Name)
+                    //        .BodyStart()
+                    //        .BodyCallMethod($"new {cppClass.Class.GetFullTypeName()}");
+                    //    cFileSb
+                    //        .AppendLine()
+                    //        .AppendLine(cfunctionWriter.Build());
+                    //}
+                }
             }
 
             File.WriteAllText(outCFile, templateManager.CHeader() + cFileSb);

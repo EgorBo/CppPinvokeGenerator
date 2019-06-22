@@ -48,7 +48,7 @@ namespace CppPinvokeGenerator
             if (wrapWith != null)
                 _sb.Append(wrapWith).Append("(");
 
-            _isVoid = type == "void" || type == null;
+            _isVoid = type == "void" || type == null || type.Contains("(void)");
             if (type != null)
                 _sb.Append(type);
 
@@ -95,6 +95,12 @@ namespace CppPinvokeGenerator
             if (!_isVoid)
                 _sb.Append("return ");
 
+            return this;
+        }
+
+        public FunctionWriter Body(string str)
+        {
+            _sb.Append(str);
             return this;
         }
 

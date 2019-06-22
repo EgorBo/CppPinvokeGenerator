@@ -7,11 +7,18 @@
 #endif
 
 #include "simdjson.h"
+
+/************* Type: padded_string *************/
+
 EXPORTS(padded_string*) padded_string_padded_string0() { return new padded_string(); }
 
 EXPORTS(padded_string*) padded_string_padded_string1(size_t length) { return new padded_string(length); }
 
 EXPORTS(padded_string*) padded_string_padded_string2(char* data, size_t length) { return new padded_string(data, length); }
+
+//NOT_BOUND:  public padded_string(basic_string s)
+
+//NOT_BOUND:  public padded_string(padded_string && o)
 
 EXPORTS(padded_string*) padded_string_padded_string5(const padded_string& o) { return new padded_string(o); }
 
@@ -23,7 +30,15 @@ EXPORTS(size_t) padded_string_length8(padded_string* target) { return target->le
 
 EXPORTS(char*) padded_string_data9(padded_string* target) { return target->data(); }
 
+//NOT_BOUND:  private padded_string& operator=(const padded_string& o)
+
+[EXPORT(void)] padded_string__delete(padded_string* target) { delete target; }
+
+/************* Type: ParsedJson *************/
+
 EXPORTS(ParsedJson*) ParsedJson_ParsedJson0() { return new ParsedJson(); }
+
+//NOT_BOUND:  public ParsedJson(ParsedJson && p)
 
 EXPORTS(ParsedJson*) ParsedJson_ParsedJson2(const ParsedJson& p) { return new ParsedJson(p); }
 
@@ -35,6 +50,10 @@ EXPORTS(void) ParsedJson_deallocate5(ParsedJson* target) { target->deallocate();
 
 EXPORTS(void) ParsedJson_init6(ParsedJson* target) { target->init(); }
 
+//NOT_BOUND:  public bool printjson(basic_ostream& os)
+
+//NOT_BOUND:  public bool dump_raw_tape(basic_ostream& os)
+
 EXPORTS(void) ParsedJson_write_tape9(ParsedJson* target, uint64_t val, uint8_t c) { target->write_tape(val, c); }
 
 EXPORTS(void) ParsedJson_write_tape_s6410(ParsedJson* target, int64_t i) { target->write_tape_s64(i); }
@@ -45,11 +64,23 @@ EXPORTS(uint32_t) ParsedJson_get_current_loc12(ParsedJson* target) { return targ
 
 EXPORTS(void) ParsedJson_annotate_previousloc13(ParsedJson* target, uint32_t saved_loc, uint64_t val) { target->annotate_previousloc(saved_loc, val); }
 
+//NOT_BOUND:  private ParsedJson& operator=(const ParsedJson& o)
+
+[EXPORT(void)] ParsedJson__delete(ParsedJson* target) { delete target; }
+
+/************* Type: ParsedJson::InvalidJSON *************/
+
 EXPORTS(const char*) InvalidJSON_what0(ParsedJson::InvalidJSON* target) { return target->what(); }
+
+[EXPORT(void)] InvalidJSON__delete(ParsedJson::InvalidJSON* target) { delete target; }
+
+/************* Type: ParsedJson::iterator *************/
 
 EXPORTS(ParsedJson::iterator*) iterator_iterator0(ParsedJson& pj_) { return new ParsedJson::iterator(pj_); }
 
 EXPORTS(ParsedJson::iterator*) iterator_iterator1(const iterator& o) { return new ParsedJson::iterator(o); }
+
+//NOT_BOUND:  public iterator(ParsedJson::iterator && o)
 
 EXPORTS(bool) iterator_isOk3(ParsedJson::iterator* target) { return target->isOk(); }
 
@@ -105,6 +136,18 @@ EXPORTS(bool) iterator_down28(ParsedJson::iterator* target) { return target->dow
 
 EXPORTS(void) iterator_to_start_scope29(ParsedJson::iterator* target) { target->to_start_scope(); }
 
+//NOT_BOUND:  public bool print(basic_ostream& os, bool escape_strings = true) const
+
+//NOT_BOUND:  private iterator& operator=(const iterator& other)
+
+[EXPORT(void)] iterator__delete(ParsedJson::iterator* target) { delete target; }
+
+/************* Type: ParsedJson::iterator::scopeindex_t *************/
+
+[EXPORT(void)] scopeindex_t__delete(ParsedJson::iterator::scopeindex_t* target) { delete target; }
+
+/************* Global functions: *************/
+
 EXPORTS(bool) _add_overflow0(uint64_t value1, uint64_t value2, uint64_t* result) { return add_overflow(value1, value2, result); }
 
 EXPORTS(bool) _mul_overflow1(uint64_t value1, uint64_t value2, uint64_t* result) { return mul_overflow(value1, value2, result); }
@@ -135,13 +178,29 @@ EXPORTS(size_t) _codepoint_to_utf813(uint32_t cp, uint8_t* c) { return codepoint
 
 EXPORTS(void) _print_with_escapes14(const unsigned char* src) { print_with_escapes(src); }
 
+//NOT_BOUND:  static void print_with_escapes(const unsigned char* src, basic_ostream& os)
+
 EXPORTS(void) _print_with_escapes16(const unsigned char* src, size_t len) { print_with_escapes(src, len); }
+
+//NOT_BOUND:  static void print_with_escapes(const unsigned char* src, basic_ostream& os, size_t len)
+
+//NOT_BOUND:  static void print_with_escapes(const char* src, basic_ostream& os)
+
+//NOT_BOUND:  static void print_with_escapes(const char* src, basic_ostream& os, size_t len)
+
+//NOT_BOUND:  padded_string get_corpus(const const basic_string& filename)
 
 EXPORTS(size_t) _jsonminify21(const uint8_t* buf, size_t len, uint8_t* out) { return jsonminify(buf, len, out); }
 
 EXPORTS(size_t) _jsonminify22(const char* buf, size_t len, char* out) { return jsonminify(buf, len, out); }
 
+//NOT_BOUND:  static size_t jsonminify(const const basic_string_view& p, char* out)
+
 EXPORTS(size_t) _jsonminify24(const padded_string& p, char* out) { return jsonminify(p, out); }
+
+//NOT_BOUND:  void dumpbits_always(uint64_t v, const const basic_string& msg)
+
+//NOT_BOUND:  void dumpbits32_always(uint32_t v, const const basic_string& msg)
 
 EXPORTS(bool) _find_structural_bits27(const uint8_t* buf, size_t len, ParsedJson& pj) { return find_structural_bits(buf, len, pj); }
 
@@ -171,11 +230,15 @@ EXPORTS(int) _json_parse39(const uint8_t* buf, size_t len, ParsedJson& pj, bool 
 
 EXPORTS(int) _json_parse40(const char* buf, size_t len, ParsedJson& pj, bool reallocifneeded) { return json_parse(buf, len, pj, reallocifneeded); }
 
+//NOT_BOUND:  int json_parse(const const basic_string& s, ParsedJson& pj)
+
 EXPORTS(int) _json_parse42(const padded_string& s, ParsedJson& pj) { return json_parse(s, pj); }
 
 EXPORTS(ParsedJson) _build_parsed_json43(const uint8_t* buf, size_t len, bool reallocifneeded) { return build_parsed_json(buf, len, reallocifneeded); }
 
 EXPORTS(ParsedJson) _build_parsed_json44(const char* buf, size_t len, bool reallocifneeded) { return build_parsed_json(buf, len, reallocifneeded); }
+
+//NOT_BOUND:  ParsedJson build_parsed_json(const const basic_string& s)
 
 EXPORTS(ParsedJson) _build_parsed_json46(const padded_string& s) { return build_parsed_json(s); }
 
