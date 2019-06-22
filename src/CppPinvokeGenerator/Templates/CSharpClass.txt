@@ -8,9 +8,9 @@
 
         /// <summary>
         /// Create %CLASS_NAME% from a native pointer
-        /// ownsHandle=false means GC won't delete the underlying native object if this C# wrapper goes out of scope
+        /// if letGcDeleteNativeObject is false GC won't release the underlying object (use ONLY if you know it will be handled by some other native object)
         /// </summary>
-        public %CLASS_NAME%(IntPtr handle, bool ownsHandle) : base(ownsHandle) => SetHandle(handle);
+        public %CLASS_NAME%(IntPtr handle, bool letGcDeleteNativeObject) : base(letGcDeleteNativeObject) => SetHandle(handle);
         #endregion
 
         #region API

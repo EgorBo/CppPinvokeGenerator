@@ -13,6 +13,7 @@ namespace CppPinvokeGenerator
         private readonly CppCompilation _cppCompilation;
         private readonly HashSet<string> _registeredTypes = new HashSet<string>();
         private readonly HashSet<string> _unsupportedTypes = new HashSet<string>();
+        private readonly HashSet<string> _unsupportedMethods = new HashSet<string>();
         private readonly Dictionary<string, string> _mappings = new Dictionary<string, string>
             {
                 // stdint.h types:
@@ -82,7 +83,7 @@ namespace CppPinvokeGenerator
             Logger.LogDebug("Inited.");
         }
 
-        public IEnumerable<CppClassContainer> GetAllClasses()
+        internal IEnumerable<CppClassContainer> GetAllClasses()
         {
             foreach (var cppClass in _cppCompilation.GetAllClassesRecursively())
             {
@@ -116,8 +117,24 @@ namespace CppPinvokeGenerator
             }
         }
 
-        public string MapToManagedType(string type)
+        public void RegisterUnsupportedMethod(string className, string methodName)
         {
+            if (string.IsNullOrEmpty(className))
+                _unsupportedMethods.Add(methodName);
+            else
+                _unsupportedMethods.Add(className + "." + methodName);
+        }
+
+        internal bool IsMethodMarkedAsUnsupported(CppFunction function)
+        {
+            if (function.Parent is CppClass cppClass)
+                return _unsupportedMethods.Contains(cppClass.GetDisplayName() + "." + function.Name);
+            return _unsupportedMethods.Contains(function.Name);
+        }
+
+        internal string NativeToPinvokeType(CppType nativeType)
+        {
+            string type = nativeType.GetDisplayName();
             bool isPtr = type.Trim().EndsWith("*");
             type = CleanType(type);
 
@@ -134,7 +151,7 @@ namespace CppPinvokeGenerator
             return type + (isPtr ? "*" : "");
         }
 
-        public bool IsSupported(string type)
+        internal bool IsSupported(string type)
         {
             // skip rvalues
             if (type.Contains("&&"))
@@ -143,7 +160,7 @@ namespace CppPinvokeGenerator
             return !_unsupportedTypes.Contains(CleanType(type));
         }
 
-        public static string CleanType(string type, bool keepPointer = false)
+        internal static string CleanType(string type, bool keepPointer = false)
         {
             type = type
                 .Split(new [] {"::"}, StringSplitOptions.RemoveEmptyEntries).Last()
@@ -162,14 +179,19 @@ namespace CppPinvokeGenerator
             return name;
         }
 
-        public string ToApiName(string name)
+        // (name, isMethod)
+        public event Func<string, bool, string> RenamingForApi;
+
+        internal string RenameForApi(string name, bool isMethod)
         {
-            var map = new Dictionary<string, string>
-            {
-                { "JSON", "Json" },
-                { "XML", "Xml" },
-                { "index", "Index" },
-            };
+            if (RenamingForApi != null)
+                name = RenamingForApi(name, isMethod);
+
+            var map = new Dictionary<string, string> {
+                    { "JSON",  "Json" },
+                    { "XML",   "Xml" },
+                    { "index", "Index" },
+                };
 
             foreach (var item in map)
                 name = name.Replace(item.Key, item.Value);
@@ -177,34 +199,32 @@ namespace CppPinvokeGenerator
             return name.ToCamelCase();
         }
 
-        public bool IsKnownNativeType(string type)
+        internal bool IsKnownNativeType(CppType nativeTtype)
         {
+            var type = nativeTtype.GetDisplayName();
             if (_registeredTypes.Any(rt => rt == CleanType(type)))
-            {
                 return true;
-            }
             return false;
         }
 
-        public string MapToManagedApiType(string type)
+        internal string MapToManagedApiType(CppType nativeType)
         {
-            if (IsKnownNativeType(type))
-            {
-                return ToApiName(CleanType(type));
-            }
+            string type = nativeType.GetDisplayName();
+            if (IsKnownNativeType(nativeType))
+                return RenameForApi(CleanType(type), false);
 
-            type = MapToManagedType(type);
+            type = NativeToPinvokeType(nativeType);
             if (type.Contains("/*usize_t*/")) return nameof(UInt64);
-            if (type.Contains("/*size_t*/"))  return nameof(Int64);
+            if (type.Contains("/*size_t*/")) return nameof(Int64);
             if (type.Contains("/*bool*/")) return nameof(Boolean);
 
             return type;
         }
 
-        public bool NeedsCastForApi(string nativeType, out string cast)
+        internal bool NeedsCastForApi(CppType nativeType, out string cast)
         {
-            var managedType = MapToManagedType(nativeType);
-            if (!managedType.Contains("/*") || nativeType == "bool")
+            string managedType = NativeToPinvokeType(nativeType);
+            if (!managedType.Contains("/*") || nativeType.IsBool())
             {
                 cast = null;
                 return false;
@@ -213,27 +233,5 @@ namespace CppPinvokeGenerator
             cast = $"({MapToManagedApiType(nativeType)})";
             return true;
         }
-    }
-
-    public class CppClassContainer
-    {
-        public CppClassContainer(CppClass cppClass)
-        {
-            Functions = cppClass.Constructors.Concat(cppClass.Functions).ToList();
-            Class = cppClass;
-        }
-
-        public CppClassContainer(IEnumerable<CppFunction> functions)
-        {
-            Functions = functions.ToList();
-        }
-
-        public bool IsGlobal => Class == null;
-
-        public CppClass Class { get; }
-
-        public string Name => Class?.GetDisplayName();
-
-        public List<CppFunction> Functions { get; }
     }
 }

@@ -16,7 +16,7 @@ EXPORTS(padded_string*)         padded_string_padded_string_s(size_t length) { r
 EXPORTS(padded_string*)         padded_string_padded_string_cs(char* data, size_t length) { return new padded_string(data, length); }
 //NOT_BOUND:                    public padded_string(basic_string s)
 //NOT_BOUND:                    public padded_string(padded_string && o)
-EXPORTS(padded_string*)         padded_string_padded_string_p(const padded_string& o) { return new padded_string(o); }
+//NOT_BOUND:                    private padded_string(const padded_string& o)
 EXPORTS(void)                   padded_string_swap_p(padded_string* target, padded_string& o) { target->swap(o); }
 EXPORTS(size_t)                 padded_string_size_0(padded_string* target) { return target->size(); }
 EXPORTS(size_t)                 padded_string_length_0(padded_string* target) { return target->length(); }
@@ -29,7 +29,7 @@ EXPORTS(void)                   padded_string__delete(padded_string* target) { d
 
 EXPORTS(ParsedJson*)            ParsedJson_ParsedJson_0() { return new ParsedJson(); }
 //NOT_BOUND:                    public ParsedJson(ParsedJson && p)
-EXPORTS(ParsedJson*)            ParsedJson_ParsedJson_P(const ParsedJson& p) { return new ParsedJson(p); }
+//NOT_BOUND:                    private ParsedJson(const ParsedJson& p)
 EXPORTS(bool)                   ParsedJson_allocateCapacity_ss(ParsedJson* target, size_t len, size_t maxdepth) { return target->allocateCapacity(len, maxdepth); }
 EXPORTS(bool)                   ParsedJson_isValid_0(ParsedJson* target) { return target->isValid(); }
 EXPORTS(void)                   ParsedJson_deallocate_0(ParsedJson* target) { target->deallocate(); }
@@ -54,7 +54,7 @@ EXPORTS(void)                   InvalidJSON__delete(ParsedJson::InvalidJSON* tar
 /************* ParsedJson::iterator *************/
 
 EXPORTS(ParsedJson::iterator*)  iterator_iterator_P(ParsedJson& pj_) { return new ParsedJson::iterator(pj_); }
-EXPORTS(ParsedJson::iterator*)  iterator_iterator_i(const iterator& o) { return new ParsedJson::iterator(o); }
+//NOT_BOUND:                    public iterator(const iterator& o)
 //NOT_BOUND:                    public iterator(ParsedJson::iterator && o)
 EXPORTS(bool)                   iterator_isOk_0(ParsedJson::iterator* target) { return target->isOk(); }
 EXPORTS(size_t)                 iterator_get_tape_location_0(ParsedJson::iterator* target) { return target->get_tape_location(); }
@@ -131,7 +131,7 @@ EXPORTS(bool)                   _is_not_structural_or_whitespace_or_exponent_or_
 EXPORTS(bool)                   _parse_float_uPub(const const uint8_t* buf, ParsedJson& pj, const uint32_t offset, bool found_minus) { return parse_float(buf, pj, offset, found_minus); }
 EXPORTS(bool)                   _parse_large_integer_uPub(const const uint8_t* buf, ParsedJson& pj, const uint32_t offset, bool found_minus) { return parse_large_integer(buf, pj, offset, found_minus); }
 EXPORTS(bool)                   _parse_number_uPub(const const uint8_t* buf, ParsedJson& pj, const uint32_t offset, bool found_minus) { return parse_number(buf, pj, offset, found_minus); }
-EXPORTS(void)                   _init_state_machine_0() { init_state_machine(); }
+//NOT_BOUND:                    void init_state_machine()
 EXPORTS(int)                    _unified_machine_usP(const uint8_t* buf, size_t len, ParsedJson& pj) { return unified_machine(buf, len, pj); }
 EXPORTS(int)                    _unified_machine_csP(const char* buf, size_t len, ParsedJson& pj) { return unified_machine(buf, len, pj); }
 EXPORTS(int)                    _json_parse_usPb(const uint8_t* buf, size_t len, ParsedJson& pj, bool reallocifneeded) { return json_parse(buf, len, pj, reallocifneeded); }

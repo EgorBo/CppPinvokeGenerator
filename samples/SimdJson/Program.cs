@@ -41,6 +41,17 @@ namespace SimdJson
             }
 
             var mapper = new TypeMapper(compilation);
+            mapper.RenamingForApi += (nativeName, isMethod) =>
+                {
+                    if (!isMethod)
+                        return nativeName + "N"; // SimdJsonSharp has two C# APIs: 1) managed 2) bindings - postfixed with 'N'
+                    if (nativeName == "get_type")
+                        return "GetTokenType";
+                    return nativeName;
+                };
+
+            // init_state_machine requires external linkage (impl)
+            mapper.RegisterUnsupportedMethod(null, "init_state_machine");
 
             // Register native types we don't want to bind (or any method with them in parameters)
             mapper.RegisterUnsupportedTypes(

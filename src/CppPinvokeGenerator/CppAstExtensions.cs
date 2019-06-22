@@ -85,5 +85,14 @@ namespace CppPinvokeGenerator
 
             return sb.ToString();
         }
+
+        public static bool IsCopyConstructor(this CppFunction function)
+        {
+            if (!function.IsConstructor || function.Parameters.Count != 1)
+                return false;
+
+            var p = function.Parameters[0].Type.GetDisplayName();
+            return p.StartsWith("const ") && p.Contains("&"); // TODO: 
+        }
     }
 }

@@ -145,10 +145,28 @@ namespace CppPinvokeGenerator
             return this;
         }
 
+        public FunctionWriter EndLastCall(bool appendComma)
+        {
+            if (_passedParametersCount > 0)
+                _sb.RemoveEnd(2);
+            _passedParametersCount = 0;
+
+            if (_bodyCalls > 0)
+            {
+                _sb.Append(")");
+                _bodyCalls--;
+            }
+            if (appendComma)
+                _sb.Append(", ");
+            return this;
+        }
+
         public string Build(string expression = null)
         {
             if (_passedParametersCount > 0)
                 _sb.RemoveEnd(2);
+            _passedParametersCount = 0;
+
             for (int i = 0; i < _bodyCalls; i++)
                 _sb.Append(")");
 

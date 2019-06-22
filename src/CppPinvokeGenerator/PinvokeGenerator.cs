@@ -37,9 +37,11 @@ namespace CppPinvokeGenerator
                 {
                     CppFunction function = allFunctions[i];
 
-                    if (!mapper.IsSupported(function.ReturnType.GetDisplayName()) ||
+                    if (mapper.IsMethodMarkedAsUnsupported(function) ||
+                        !mapper.IsSupported(function.ReturnType.GetDisplayName()) ||
                         !function.Parameters.All(p => mapper.IsSupported(p.Type.GetDisplayName())) ||
-                        function.IsOperator())
+                        function.IsOperator() ||
+                        function.IsCopyConstructor())
                     {
                         cFileSb.AppendLine($"//NOT_BOUND:".PadRight(32) + function);
                         Logger.LogWarning($"Ignoring {function.Name}");
@@ -77,17 +79,16 @@ namespace CppPinvokeGenerator
                     }
                     else
                     {
-                        var funcReturnType = function.ReturnType.GetFullTypeName();
-                        cfunctionWriter.ReturnType(funcReturnType, "EXPORTS", 32);
-                        dllImportWriter.ReturnType(mapper.MapToManagedType(funcReturnType));
-                        apiFunctionWriter.ReturnType(mapper.MapToManagedApiType(funcReturnType));
+                        cfunctionWriter.ReturnType(function.ReturnType.GetFullTypeName(), "EXPORTS", 32);
+                        dllImportWriter.ReturnType(mapper.NativeToPinvokeType(function.ReturnType));
+                        apiFunctionWriter.ReturnType(mapper.MapToManagedApiType(function.ReturnType));
                     }
 
                     // PS: should we generate C for global functions (we currently do)? probably it should be optional
 
                     cfunctionWriter.MethodName(flatFunctionName);
                     dllImportWriter.MethodName(flatFunctionName);
-                    apiFunctionWriter.MethodName(mapper.ToApiName(function.Name));
+                    apiFunctionWriter.MethodName(mapper.RenameForApi(function.Name, isMethod: !function.IsConstructor));
 
                     if (!function.IsConstructor &&
                         !function.IsStatic() &&
@@ -105,11 +106,11 @@ namespace CppPinvokeGenerator
                             parameter.Name);
 
                         dllImportWriter.Parameter(
-                            mapper.MapToManagedType(parameter.Type.GetDisplayName()),
+                            mapper.NativeToPinvokeType(parameter.Type),
                             mapper.EscapeVariableName(parameter.Name));
 
                         apiFunctionWriter.Parameter(
-                            mapper.MapToManagedApiType(parameter.Type.GetDisplayName()),
+                            mapper.MapToManagedApiType(parameter.Type),
                             mapper.EscapeVariableName(parameter.Name));
                     }
 
@@ -142,14 +143,14 @@ namespace CppPinvokeGenerator
 
                     apiFunctionWriter.StartExpressionBody();
 
-                    if (mapper.IsKnownNativeType(function.ReturnType.GetDisplayName()))
+                    if (mapper.IsKnownNativeType(function.ReturnType))
                     {
                         // call "ctor(IntPtr, bool)"
-                        apiFunctionWriter.BodyCallMethod("new " + mapper.MapToManagedApiType(function.ReturnType.GetDisplayName()) + "(");
+                        apiFunctionWriter.BodyCallMethod("new " + mapper.MapToManagedApiType(function.ReturnType));
                     }
 
                     // some API functions need special casts, e.g. IntPtr/*size_t*/ (nint) to long
-                    if (mapper.NeedsCastForApi(function.ReturnType.GetDisplayName(), out string returnTypeApiCast))
+                    if (mapper.NeedsCastForApi(function.ReturnType, out string returnTypeApiCast))
                         apiFunctionWriter.BodyCallMethod(returnTypeApiCast);
 
                     apiFunctionWriter.BodyCallMethod(flatFunctionName);
@@ -162,21 +163,18 @@ namespace CppPinvokeGenerator
                     {
                         cfunctionWriter.PassParameter(parameter.Name);
 
-                        string nativeType = parameter.Type.GetDisplayName();
-                        string dllImportType = mapper.MapToManagedType(nativeType);
+                        string dllImportType = mapper.NativeToPinvokeType(parameter.Type);
                         string escapedName = mapper.EscapeVariableName(parameter.Name);
 
                         if (parameter.Type.IsBool()) // bool to byte 
                             escapedName = $"(Byte)({escapedName} ? 1 : 0)";
 
-
                         // cast to DllImport's type if needed (TODO: wrap with checked {))
-
                         else if (dllImportType.Contains("/*"))
                             escapedName = $"({dllImportType.DropComments()}){escapedName}";
 
                         // if the parameter is a C# class-wrapper - pass its Handle
-                        else if (mapper.IsKnownNativeType(nativeType))
+                        else if (mapper.IsKnownNativeType(parameter.Type))
                             escapedName = $"({escapedName} == null ? IntPtr.Zero : {escapedName}.Handle)";
                         
                         apiFunctionWriter.PassParameter(escapedName);
@@ -184,10 +182,11 @@ namespace CppPinvokeGenerator
 
                     if (function.ReturnType.IsBool())
                         csApiSb.AppendLine(apiFunctionWriter.Build(" > 0").Tabify(2)); // byte to bool
-                    else if (mapper.IsKnownNativeType(function.ReturnType.GetDisplayName()))
+                    else if (mapper.IsKnownNativeType(function.ReturnType))
                     {
                         // pass "false" to "ownsHandle" argument
-                        csApiSb.AppendLine(apiFunctionWriter.Build(", false)").Tabify(2));
+                        apiFunctionWriter.EndLastCall(true).PassParameter("false");
+                        csApiSb.AppendLine(apiFunctionWriter.Build().Tabify(2));
                     }
                     else
                         csApiSb.AppendLine(apiFunctionWriter.Build().Tabify(2));
@@ -204,7 +203,7 @@ namespace CppPinvokeGenerator
                     csFileSb.Append(templateManager.CSharpGlobalClass(csDllImportsSb.ToString(), csApiSb.ToString(), dllImportPath));
                 else if (!cppClass.IsGlobal)
                 {
-                    csFileSb.Append(templateManager.CSharpClass(mapper.ToApiName(cppClass.Name), cppClass.Name, csDllImportsSb.ToString(), csApiSb.ToString(), dllImportPath));
+                    csFileSb.Append(templateManager.CSharpClass(mapper.RenameForApi(cppClass.Name, false), cppClass.Name, csDllImportsSb.ToString(), csApiSb.ToString(), dllImportPath));
 
                     // Append "delete" method:
                     // EXPORTS(void) %class%_delete(%class%* target) { if (target) delete target; }
