@@ -7,12 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Output\Bindings.cs" />
-    <None Include="Output\Bindings.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CppAst" Version="0.2.0" />
+    <PackageReference Include="CppAst" Version="0.5.7" />
   </ItemGroup>
 
   <ItemGroup>

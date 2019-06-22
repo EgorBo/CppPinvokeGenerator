@@ -58,10 +58,10 @@ namespace SimdJson
 
             PinvokeGenerator.Generate(mapper, 
                 templateManager, 
-                @namespace: "MyNamespace", 
-                dllImportPath: @"""simdjson.dll""",
-                outCFile:  Path.Combine(outputFolder, "Bindings.c"),
-                outCsFile: Path.Combine(outputFolder, "Bindings.cs"));
+                @namespace: "SimdJsonSharp", 
+                dllImportPath: @"SimdJsonN.NativeLib",
+                outCFile:  Path.Combine(outputFolder, "Bindings.Generated.c"),
+                outCsFile: Path.Combine(outputFolder, "Bindings.Generated.cs"));
 
             Console.WriteLine("Done. See Output folder.");
         }
