@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using CppAst;
 
 namespace CppPinvokeGenerator
@@ -57,6 +58,30 @@ namespace CppPinvokeGenerator
             Console.ForegroundColor = color;
 
             return true;
+        }
+
+        /// <summary>
+        /// E.g.: "void Foo(int age, char* name)" ==> "ic" (first letters of parameters' types)
+        /// </summary>
+        public static string ParametersMask(this CppFunction function)
+        {
+            var sb = new StringBuilder();
+            var parameters = function.Parameters.ToList();
+            if (parameters.Count < 1)
+                sb.Append("0");
+            else
+                foreach (var p in parameters)
+                {
+                    var type = p.Type.GetDisplayName()
+                        .Replace("const ", "")
+                        .Replace("*", "")
+                        .Replace("&", "")
+                        .Trim();
+
+                    sb.Append(type[0]);
+                }
+
+            return sb.ToString();
         }
     }
 }

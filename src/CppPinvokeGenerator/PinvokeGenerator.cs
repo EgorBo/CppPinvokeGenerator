@@ -25,6 +25,8 @@ namespace CppPinvokeGenerator
                 int ctors = 0;
 
                 cFileSb.AppendLine();
+                cFileSb.AppendLine();
+                cFileSb.AppendLine();
                 cFileSb.AppendLine(cppClass.IsGlobal
                     ? $"/************* Global functions: *************/"
                     : $"/************* Type: {cppClass.Class.GetFullTypeName()} *************/");
@@ -51,7 +53,7 @@ namespace CppPinvokeGenerator
                     methodsBound++;
 
                     // Type_MethodName1
-                    string flatFunctionName = $"{cppClass.Name}_{function.Name}{i}";
+                    string flatFunctionName = $"{cppClass.Name}_{function.Name}_{function.ParametersMask()}";
                     if (!generateCForGlobalFunctions)
                         flatFunctionName = function.Name; // we are going to pinvoke it directly
 
@@ -152,19 +154,6 @@ namespace CppPinvokeGenerator
                         .Body("delete target");
                     cFileSb
                         .AppendLine(cfunctionWriter.Build());
-
-                    // default ctor
-                    //if (ctors < 1)
-                    //{
-                    //    cfunctionWriter = new FunctionWriter();
-                    //    cfunctionWriter.ReturnType($"[EXPORT({cppClass.Class.GetFullTypeName()}*)]")
-                    //        .MethodName(cppClass.Name + "_" + cppClass.Name)
-                    //        .BodyStart()
-                    //        .BodyCallMethod($"new {cppClass.Class.GetFullTypeName()}");
-                    //    cFileSb
-                    //        .AppendLine()
-                    //        .AppendLine(cfunctionWriter.Build());
-                    //}
                 }
             }
 
