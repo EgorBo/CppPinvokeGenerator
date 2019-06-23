@@ -190,6 +190,7 @@ namespace CppPinvokeGenerator
             var map = new Dictionary<string, string> {
                     { "JSON",  "Json" },
                     { "XML",   "Xml" },
+                    { "minify", "Minify" },
                     { "index", "Index" },
                 };
 

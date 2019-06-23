@@ -564,11 +564,11 @@ namespace SimdJsonSharp
         /// out can be the same pointer. Result is null terminated,
         /// return the string length (minus the null termination).
         /// </summary>
-        public static Int64 Jsonminify(Byte* buf, Int64 len, Byte* @out) => (Int64)(_jsonminify_usu(buf, (IntPtr)len, @out));
+        public static Int64 JsonMinify(Byte* buf, Int64 len, Byte* @out) => (Int64)(_jsonminify_usu(buf, (IntPtr)len, @out));
 
-        public static Int64 Jsonminify(SByte* buf, Int64 len, SByte* @out) => (Int64)(_jsonminify_csc(buf, (IntPtr)len, @out));
+        public static Int64 JsonMinify(SByte* buf, Int64 len, SByte* @out) => (Int64)(_jsonminify_csc(buf, (IntPtr)len, @out));
 
-        public static Int64 Jsonminify(PaddedStringN p, SByte* @out) => (Int64)(_jsonminify_pc((p == null ? IntPtr.Zero : p.Handle), @out));
+        public static Int64 JsonMinify(PaddedStringN p, SByte* @out) => (Int64)(_jsonminify_pc((p == null ? IntPtr.Zero : p.Handle), @out));
 
         public static Boolean FindStructuralBits(Byte* buf, Int64 len, ParsedJsonN pj) => _find_structural_bits_usP(buf, (IntPtr)len, (pj == null ? IntPtr.Zero : pj.Handle)) > 0;
 

@@ -14,8 +14,7 @@ namespace CppPinvokeGenerator
         private static readonly ILogger Logger = LoggerFactory.GetLogger<TypeMapper>();
 
         /// <param name="dllImportPath">will be used as the first argument in [DllImport]. Can be a path to some constant</param>
-        /// <param name="generateCForGlobalFunctions">sometimes global functions are ready to be pinvoked as is</param>
-        public static void Generate(TypeMapper mapper, TemplateManager templateManager, string @namespace, string dllImportPath, string outCFile, string outCsFile, bool generateCForGlobalFunctions = true)
+        public static void Generate(TypeMapper mapper, TemplateManager templateManager, string @namespace, string dllImportPath, string outCFile, string outCsFile)
         {
             var csFileSb = new StringBuilder();
             var cFileSb = new StringBuilder();
@@ -33,10 +32,8 @@ namespace CppPinvokeGenerator
                 var csDllImportsSb = new StringBuilder();
                 var csApiSb = new StringBuilder();
                 List<CppFunction> allFunctions = cppClass.Functions;
-                for (int i = 0; i < allFunctions.Count; i++)
+                foreach (CppFunction function in allFunctions)
                 {
-                    CppFunction function = allFunctions[i];
-
                     if (mapper.IsMethodMarkedAsUnsupported(function) ||
                         !mapper.IsSupported(function.ReturnType.GetDisplayName()) ||
                         !function.Parameters.All(p => mapper.IsSupported(p.Type.GetDisplayName())) ||
@@ -51,13 +48,10 @@ namespace CppPinvokeGenerator
 
                     // Type_MethodName1
                     string flatFunctionName = $"{cppClass.Name}_{function.Name}_{function.ParametersMask()}";
-                    if (!generateCForGlobalFunctions)
-                        flatFunctionName = function.Name; // we are going to pinvoke it directly
 
                     var cfunctionWriter = new FunctionWriter();
                     var dllImportWriter = new FunctionWriter();
                     var apiFunctionWriter = new FunctionWriter();
-
 
                     dllImportWriter
                         .Attribute($"[DllImport({dllImportPath}, CallingConvention = CallingConvention.Cdecl)]")
@@ -83,8 +77,6 @@ namespace CppPinvokeGenerator
                         dllImportWriter.ReturnType(mapper.NativeToPinvokeType(function.ReturnType));
                         apiFunctionWriter.ReturnType(mapper.MapToManagedApiType(function.ReturnType));
                     }
-
-                    // PS: should we generate C for global functions (we currently do)? probably it should be optional
 
                     cfunctionWriter.MethodName(flatFunctionName);
                     dllImportWriter.MethodName(flatFunctionName);
@@ -169,7 +161,7 @@ namespace CppPinvokeGenerator
                         if (parameter.Type.IsBool()) // bool to byte 
                             escapedName = $"(Byte)({escapedName} ? 1 : 0)";
 
-                        // cast to DllImport's type if needed (TODO: wrap with checked {))
+                        // cast to DllImport's type if needed (TODO: wrap with checked {})
                         else if (dllImportType.Contains("/*"))
                             escapedName = $"({dllImportType.DropComments()}){escapedName}";
 
@@ -199,7 +191,7 @@ namespace CppPinvokeGenerator
                     cFileSb.AppendLine(cfunctionWriter.Build());
                 }
 
-                if (cppClass.IsGlobal && generateCForGlobalFunctions)
+                if (cppClass.IsGlobal)
                     csFileSb.Append(templateManager.CSharpGlobalClass(csDllImportsSb.ToString(), csApiSb.ToString(), dllImportPath));
                 else if (!cppClass.IsGlobal)
                 {
