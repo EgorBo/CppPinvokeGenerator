@@ -35,3 +35,8 @@ public partial class Calculator : SafeHandle
 
 So the generator is able to generate C# classes and the C glue.
 As an example - see [samples/SimdJson](https://github.com/EgorBo/CppPinvokeGenerator/tree/master/samples/SimdJson).
+
+# Nuget
+```
+dotnet add package CppPinvokeGenerator
+```
