@@ -22,11 +22,11 @@ namespace SimdJsonSharp
         #endregion
 
         #region API
-        public PaddedStringN() : base(ownsHandle: true) => padded_string_padded_string_0();
+        public PaddedStringN() : base(ownsHandle: true) => SetHandle(padded_string_padded_string_0());
 
-        public PaddedStringN(Int64 length) : base(ownsHandle: true) => padded_string_padded_string_s((IntPtr)length);
+        public PaddedStringN(Int64 length) : base(ownsHandle: true) => SetHandle(padded_string_padded_string_s((IntPtr)length));
 
-        public PaddedStringN(SByte* data, Int64 length) : base(ownsHandle: true) => padded_string_padded_string_cs(data, (IntPtr)length);
+        public PaddedStringN(SByte* data, Int64 length) : base(ownsHandle: true) => SetHandle(padded_string_padded_string_cs(data, (IntPtr)length));
 
         public void Swap(PaddedStringN o) => padded_string_swap_p(Handle, (o == null ? IntPtr.Zero : o.Handle));
 
@@ -92,7 +92,7 @@ namespace SimdJsonSharp
         /// create a ParsedJson container with zero capacity, call allocateCapacity to
         /// allocate memory
         /// </summary>
-        public ParsedJsonN() : base(ownsHandle: true) => ParsedJson_ParsedJson_0();
+        public ParsedJsonN() : base(ownsHandle: true) => SetHandle(ParsedJson_ParsedJson_0());
 
         /// <summary>
         /// if needed, allocate memory so that the object is able to process JSON
@@ -207,7 +207,7 @@ namespace SimdJsonSharp
         #endregion
     }
 
-﻿    public unsafe partial class IteratorN : SafeHandleZeroOrMinusOneIsInvalid
+﻿    public unsafe partial class ParsedJsonIteratorN : SafeHandleZeroOrMinusOneIsInvalid
     {
         #region Handle
         /// <summary>
@@ -216,17 +216,17 @@ namespace SimdJsonSharp
         public IntPtr Handle => DangerousGetHandle();
 
         /// <summary>
-        /// Create IteratorN from a native pointer
+        /// Create ParsedJsonIteratorN from a native pointer
         /// if letGcDeleteNativeObject is false GC won't release the underlying object (use ONLY if you know it will be handled by some other native object)
         /// </summary>
-        public IteratorN(IntPtr handle, bool letGcDeleteNativeObject) : base(letGcDeleteNativeObject) => SetHandle(handle);
+        public ParsedJsonIteratorN(IntPtr handle, bool letGcDeleteNativeObject) : base(letGcDeleteNativeObject) => SetHandle(handle);
         #endregion
 
         #region API
         /// <summary>
         /// might throw InvalidJSON if ParsedJson is invalid
         /// </summary>
-        public IteratorN(ParsedJsonN pj_) : base(ownsHandle: true) => iterator_iterator_P((pj_ == null ? IntPtr.Zero : pj_.Handle));
+        public ParsedJsonIteratorN(ParsedJsonN pj_) : base(ownsHandle: true) => SetHandle(iterator_iterator_P((pj_ == null ? IntPtr.Zero : pj_.Handle)));
 
         public Boolean IsOk() => iterator_isOk_0(Handle) > 0;
 
@@ -488,7 +488,7 @@ namespace SimdJsonSharp
         #endregion
     }
 
-﻿    public unsafe static partial class GlobalFunctions
+﻿    public unsafe static partial class SimdJsonN
     {
         #region API
         public static Boolean AddOverflow(UInt64 value1, UInt64 value2, UInt64* result) => _add_overflow_uuu(value1, value2, result) > 0;

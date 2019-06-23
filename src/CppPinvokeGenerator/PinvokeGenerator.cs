@@ -149,9 +149,15 @@ namespace CppPinvokeGenerator
                     }
 
                     if (function.IsConstructor)
-                        apiFunctionWriter.BaseCtor("ownsHandle: true");
+                    {
+                        apiFunctionWriter
+                            .BaseCtor("ownsHandle: true")
+                            .StartExpressionBody()
+                            .BodyCallMethod("SetHandle");
+                    }
+                    else
+                        apiFunctionWriter.StartExpressionBody();
 
-                    apiFunctionWriter.StartExpressionBody();
 
                     if (mapper.IsKnownNativeType(function.ReturnType))
                     {

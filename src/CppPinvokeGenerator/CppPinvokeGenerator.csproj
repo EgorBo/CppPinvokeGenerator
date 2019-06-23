@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>0.1.1</VersionPrefix>
+    <VersionPrefix>0.1.2</VersionPrefix>
     <PackageId>CppPinvokeGenerator</PackageId>
     <Description>CppPinvokeGenerator is a simple pinvoke generator based on CppAst to generate C# for C++</Description>
     <Copyright>EgorBo</Copyright>

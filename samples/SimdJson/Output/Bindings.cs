@@ -6,9 +6,8 @@ using System.Text;
 
 namespace SimdJsonSharp
 {
-    public static unsafe class SimdJsonN
+    partial class SimdJsonN
     {
         public const string NativeLib = @"SimdJsonNative";
-
     }
 }

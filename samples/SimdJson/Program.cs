@@ -43,6 +43,8 @@ namespace SimdJson
             var mapper = new TypeMapper(compilation);
             mapper.RenamingForApi += (nativeName, isMethod) =>
                 {
+                    if (nativeName == "iterator")
+                        return "ParsedJsonIteratorN";
                     if (!isMethod)
                         return nativeName + "N"; // SimdJsonSharp has two C# APIs: 1) managed 2) bindings - postfixed with 'N'
                     if (nativeName == "get_type")
@@ -65,7 +67,7 @@ namespace SimdJson
             // Add additional stuff we want to see in the bindings.c
             templateManager
                 .AddToCHeader(@"#include ""simdjson.h""")
-                .SetGlobalFunctionsClassName("GlobalFunctions");
+                .SetGlobalFunctionsClassName("SimdJsonN");
 
             PinvokeGenerator.Generate(mapper, 
                 templateManager, 
