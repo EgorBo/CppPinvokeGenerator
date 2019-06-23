@@ -31,8 +31,10 @@ namespace CppPinvokeGenerator
 
                 var csDllImportsSb = new StringBuilder();
                 var csApiSb = new StringBuilder();
-                List<CppFunction> allFunctions = cppClass.Functions;
-                foreach (CppFunction function in allFunctions)
+                var allFunctions = new List<CppFunction>();
+
+                // filter out functions we are not going to bind:
+                foreach (var function in cppClass.Functions)
                 {
                     if (mapper.IsMethodMarkedAsUnsupported(function) ||
                         !mapper.IsSupported(function.ReturnType.GetDisplayName()) ||
@@ -41,12 +43,18 @@ namespace CppPinvokeGenerator
                         function.IsCopyConstructor())
                     {
                         cFileSb.AppendLine($"//NOT_BOUND:".PadRight(32) + function);
-                        Logger.LogWarning($"Ignoring {function.Name}");
-                        // we can't bind this method (yet)
                         continue;
                     }
 
-                    // Type_MethodName1
+                    allFunctions.Add(function);
+                }
+
+                var propertyGenerator = new PropertyGenerator();
+                propertyGenerator.RegisterCandidates(mapper, allFunctions);
+
+                foreach (CppFunction function in allFunctions)
+                {
+                    // Type_MethodName_argsMask
                     string flatFunctionName = $"{cppClass.Name}_{function.Name}_{function.ParametersMask()}";
 
                     var cfunctionWriter = new FunctionWriter();
@@ -60,8 +68,18 @@ namespace CppPinvokeGenerator
                         .Extern();
 
                     apiFunctionWriter
-                        .SummaryComment(function.Comment?.ChildrenToString())
-                        .Public();
+                        .SummaryComment(function.Comment?.ChildrenToString());
+
+                    var propertyInfo = propertyGenerator.AsPropertyCandidate(function);
+                    if (propertyInfo == null)
+                        apiFunctionWriter.Public();
+                    else
+                    {
+                        // TODO: convert to properties
+                        //apiFunctionWriter.Private();
+                        //csApiSb.AppendLine(propertyInfo.GenerateProperty().Tabify(2));
+                        apiFunctionWriter.Public();
+                    }
 
                     if (function.IsStatic() || cppClass.IsGlobal)
                         apiFunctionWriter.Static();
