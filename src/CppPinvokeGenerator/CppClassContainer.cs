@@ -24,5 +24,7 @@ namespace CppPinvokeGenerator
         public string Name => Class?.GetDisplayName();
 
         public List<CppFunction> Functions { get; }
+
+        public override string ToString() => Name;
     }
 }

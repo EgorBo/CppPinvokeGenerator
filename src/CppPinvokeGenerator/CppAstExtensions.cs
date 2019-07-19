@@ -38,6 +38,14 @@ namespace CppPinvokeGenerator
             return cppClasses;
         }
 
+        public static List<CppClass> GetAllClassesRecursively(this CppNamespace compilation)
+        {
+            var cppClasses = new List<CppClass>();
+            foreach (var cppClass in compilation.Classes)
+                VisitClass(cppClasses, cppClass);
+            return cppClasses;
+        }
+
         private static void VisitClass(List<CppClass> cppClasses, CppClass cppClass)
         {
             cppClasses.Add(cppClass);
@@ -60,6 +68,11 @@ namespace CppPinvokeGenerator
             Console.ForegroundColor = color;
 
             return true;
+        }
+
+        public static IEnumerable<CppClass> OnlyUnique(this IEnumerable<CppClass> source)
+        {
+            return source.Distinct(new CppClassEqualityComparer());
         }
 
         /// <summary>
@@ -94,5 +107,12 @@ namespace CppPinvokeGenerator
             var p = function.Parameters[0].Type.GetDisplayName();
             return p.StartsWith("const ") && p.Contains("&"); // TODO: 
         }
+    }
+
+    internal class CppClassEqualityComparer : IEqualityComparer<CppClass>
+    {
+        public bool Equals(CppClass x, CppClass y) => x.GetFullTypeName().Equals(y.GetFullTypeName());
+
+        public int GetHashCode(CppClass c) => c.GetFullTypeName().GetHashCode();
     }
 }

@@ -32,6 +32,7 @@ namespace SimdJson
             // TODO: test on macOS
             options.ConfigureForWindowsMsvc(CppTargetCpu.X86_64);
             options.AdditionalArguments.Add("-std=c++17");
+
             CppCompilation compilation = CppParser.ParseFile(Path.Combine(outputFolder, @"simdjson.h"), options);
 
             if (compilation.DumpErrorsIfAny())
@@ -49,6 +50,8 @@ namespace SimdJson
                         return nativeName + "N"; // SimdJsonSharp has two C# APIs: 1) managed 2) bindings - postfixed with 'N'
                     if (nativeName == "get_type")
                         return "GetTokenType";
+                    if (nativeName == "get_string")
+                        return "GetUtf8String";
                     return nativeName;
                 };
 
@@ -58,6 +61,7 @@ namespace SimdJson
             // Register native types we don't want to bind (or any method with them in parameters)
             mapper.RegisterUnsupportedTypes(
                 "simdjson", // it's empty - we don't need it
+                "__m128i",
                 "basic_string",      // TODO:
                 "basic_string_view", // TODO
                 "basic_ostream");    // TODO:

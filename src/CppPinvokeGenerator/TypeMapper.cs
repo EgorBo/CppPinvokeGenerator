@@ -66,8 +66,10 @@ namespace CppPinvokeGenerator
                 "var",
                 "namespace",
                 "ref",
+                "in",
                 "out",
                 "class",
+                "base",
             };
 
         public CppCompilation CppCompilation => _cppCompilation;
@@ -75,24 +77,35 @@ namespace CppPinvokeGenerator
         public TypeMapper(CppCompilation cppCompilation)
         {
             _cppCompilation = cppCompilation;
-            foreach (CppClass cppClass in cppCompilation.GetAllClassesRecursively())
-            {
-                string displayName = cppClass.GetDisplayName();
-                RegisterClass(CleanType(displayName));
-            }
-            Logger.LogDebug("Inited.");
         }
 
         internal IEnumerable<CppClassContainer> GetAllClasses()
         {
-            foreach (var cppClass in _cppCompilation.GetAllClassesRecursively())
+            var globalFunctions = new List<CppFunction>();
+            var allClasses = new List<CppClass>();
+
+            globalFunctions.AddRange(_cppCompilation.Functions);
+            allClasses.AddRange(_cppCompilation.GetAllClassesRecursively());
+
+            foreach (CppNamespace ns in _cppCompilation.Namespaces)
+            {
+                globalFunctions.AddRange(ns.Functions);
+                allClasses.AddRange(ns.GetAllClassesRecursively());
+            }
+
+            allClasses = allClasses.OnlyUnique().ToList();
+
+            foreach (var cppClass in allClasses)
             {
                 if (IsSupported(cppClass.GetDisplayName()))
+                {
+                    RegisterClass(CleanType(cppClass.GetDisplayName()));
                     yield return new CppClassContainer(cppClass);
+                }
             }
 
             // "Global" class for global functions
-            yield return new CppClassContainer(_cppCompilation.Functions);
+            yield return new CppClassContainer(globalFunctions);
         }
 
         public void RegisterClass(string className)

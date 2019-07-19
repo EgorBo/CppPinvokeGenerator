@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>0.1.2</VersionPrefix>
+    <VersionPrefix>0.1.4</VersionPrefix>
     <PackageId>CppPinvokeGenerator</PackageId>
     <Description>CppPinvokeGenerator is a simple pinvoke generator based on CppAst to generate C# for C++</Description>
     <Copyright>EgorBo</Copyright>
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CppAst" Version="0.5.7" />
+    <PackageReference Include="CppAst" Version="0.5.8" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
   </ItemGroup>
 

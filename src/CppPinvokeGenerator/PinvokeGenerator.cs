@@ -18,6 +18,7 @@ namespace CppPinvokeGenerator
         {
             var csFileSb = new StringBuilder();
             var cFileSb = new StringBuilder();
+
             foreach (CppClassContainer cppClass in mapper.GetAllClasses())
             {
                 // Header for C types:
@@ -36,6 +37,9 @@ namespace CppPinvokeGenerator
                 // filter out functions we are not going to bind:
                 foreach (var function in cppClass.Functions)
                 {
+                    if (function.Visibility == CppVisibility.Private)
+                        continue;
+
                     if (mapper.IsMethodMarkedAsUnsupported(function) ||
                         !mapper.IsSupported(function.ReturnType.GetDisplayName()) ||
                         !function.Parameters.All(p => mapper.IsSupported(p.Type.GetDisplayName())) ||
